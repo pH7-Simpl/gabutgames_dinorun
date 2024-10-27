@@ -1,4 +1,4 @@
-#Langkah-Langkah Pembuatan Game Dino
+# Langkah-Langkah Pembuatan Game Dino
 <details>
   <summary>1. Setup Proyek</summary>
 </details>
