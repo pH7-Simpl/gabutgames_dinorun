@@ -390,12 +390,51 @@ Ini adalah implementasi sederhana dari game Dino klasik yang biasa ditemukan di 
   **Buat File Header DinoPauseScreen.h**
   
   Berisi variabel-variabel berikut:
-
+  * std::vector<Button*> buttons;: Vektor yang menyimpan pointer ke objek-objek Button. Digunakan untuk mengelola tombol-tombol di layar Pause (misalnya, "Continue", "Main Menu", "Exit").
+  * Text* text;: Pointer ke objek Text. Digunakan untuk menampilkan teks "Paused" di layar.
+  * int currentButtonIndex = 0;: Variabel integer yang menyimpan indeks tombol yang sedang dipilih dalam vektor buttons. 0 menunjukkan tombol pertama.
+  
   Deklarasikan fungsi yang ada pada DinoPauseScreen.cpp:
+  * DinoPauseScreen();: Konstruktor default.
+  * Init() override;: Fungsi untuk inisialisasi layar Pause. Biasanya meliputi pembuatan tombol, teks, dan pengaturan input mapping. override keyword menandakan fungsi ini meng-override fungsi virtual di base class (Screen).
+  * Update() override;: Fungsi yang dipanggil setiap frame untuk memperbarui logika layar Pause. Ini biasanya memproses input pemain (navigasi menu, memilih tombol) dan memperbarui status tombol.
+  * Draw() override;: Fungsi yang dipanggil setiap frame untuk menggambar layar Pause. Ini menggambar tombol dan teks "Paused" di layar.
   
   **Buat File DinoPauseScreen.cpp**
   
   Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada DinoPauseScreen.h:
+  * Konstruktor (Engine::DinoPauseScreen::DinoPauseScreen()): Menginisialisasi pointer text ke NULL. Ini penting untuk menghindari perilaku yang tidak terdefinisi saat mencoba mengakses pointer sebelum diinisialisasi.
+  * Init():
+    * Membuat Tekstur: Membuat objek Texture dari file gambar "buttons2.png".
+    * Membuat Sprite untuk Tombol: Membuat objek Sprite untuk setiap tombol ("Continue", "Main Menu", "Exit"), menggunakan tekstur yang dimuat. Animasi tombol dikonfigurasi dengan SetNumXFrames, SetNumYFrames, AddAnimation, dan SetAnimationDuration.
+    * Membuat Tombol:
+      * Membuat objek Button untuk setiap tombol menggunakan sprite yang sesuai.
+      * SetPosition digunakan untuk menempatkan tombol di layar. Perhitungan posisi relatif terhadap ukuran layar.
+      * Tombol ditambahkan ke vektor buttons.
+    * Membuat Teks "Paused": Membuat objek Text untuk menampilkan "Paused". Font, ukuran, shader, posisi, dan warna teks diatur.
+    * Input Mapping: Mendaftarkan tombol panah atas/bawah (SDLK_UP, SDLK_DOWN) untuk navigasi, Enter (SDLK_RETURN) untuk memilih tombol, dan Escape (SDLK_ESCAPE) untuk pause/unpause.
+    * Tombol Aktif Awal: currentButtonIndex = 0; Mengatur "Continue" (indeks 0) sebagai tombol aktif awal dan mengubah statusnya ke HOVER.
+  * Update():
+    * Warna Latar Belakang: game->SetBackgroundColor(52, 155, 235); Mengatur warna latar belakang layar.
+    * Memproses Input:
+      * Navigasi:
+        * if (game->GetInputManager()->IsKeyReleased("next")): Jika tombol "next" (panah bawah) dilepas:
+          * Status tombol sebelumnya diubah ke NORMAL.
+          * currentButtonIndex diinkrementasi (dengan logika modulo untuk loop melingkar).
+          * Status tombol baru diubah ke HOVER.
+        * if (game->GetInputManager()->IsKeyReleased("prev")): Logika yang sama untuk tombol "prev" (panah atas), tetapi currentButtonIndex didekrementasi.
+      * Memilih Tombol:
+        * if (game->GetInputManager()->IsKeyReleased("press")): Jika tombol "press" (Enter) dilepas:
+          * Status tombol diubah ke PRESS. Periksa nama tombol:
+            * Jika "continue", ganti layar ke "dino" (layar permainan).
+            * Jika "mainmenu", jalankan GameOver() di DinoGameScreen untuk mereset game, lalu ganti layar ke "mainmenu".
+            * Jika "exit", keluar dari game.
+      * Tombol Pause:
+      * if (game->GetInputManager()->IsKeyReleased("pause")): Jika tombol "pause" (Escape) dilepas, ganti layar ke "dino" untuk melanjutkan permainan. Ini menyediakan cara alternatif untuk unpause selain tombol "Continue".
+  * Update Tombol: Memanggil Update() pada setiap tombol untuk memperbarui animasi (misalnya, efek hover).
+  * Draw():
+    * Menggambar Tombol: Loop melalui vektor buttons dan panggil Draw() pada setiap tombol.
+    * Menggambar Teks: Menggambar teks "Paused".
   
 </details>
 <details>
