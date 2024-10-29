@@ -331,12 +331,57 @@ Ini adalah implementasi sederhana dari game Dino klasik yang biasa ditemukan di 
   **Buat File Header DinoGameOverScreen.h**
   
   Berisi variabel-variabel berikut:
+  * std::vector<Button*> buttons;: Vektor yang menyimpan pointer ke objek-objek Button. Digunakan untuk mengelola tombol di layar Game Over (misalnya, "Retry", "Main Menu", "Exit").
+  * Text* gameOverText;: Pointer ke objek Text yang digunakan untuk menampilkan teks "Game Over".
+  * Text* bestScoreText;: Pointer ke objek Text yang digunakan untuk menampilkan skor terbaik.
+  * int currentButtonIndex = 0;: Variabel integer yang menyimpan indeks tombol yang sedang dipilih dalam vektor buttons. Nilai 0 menunjukkan tombol pertama.
+  * Dino* dino;: Pointer ke objek Dino. Digunakan untuk mengakses informasi seperti skor terbaik dari objek Dino.
 
   Deklarasikan fungsi yang ada pada DinoGameOverScreen.cpp:
+  * DinoGameOverScreen(Dino* dinoInstance);: Konstruktor. Menerima pointer ke objek Dino sebagai argumen.
+  * Init() override;: Inisialisasi layar Game Over. Biasanya meliputi pembuatan tombol, teks, dan pengaturan input mapping.
+  * Update() override;: Memperbarui logika layar Game Over. Memproses input pemain dan memperbarui status tombol.
+  * Draw() override;: Menggambar layar Game Over, termasuk tombol, teks "Game Over", dan skor terbaik.
+  * SetBestScoreText();: Fungsi untuk memperbarui teks skor terbaik yang ditampilkan di layar.
   
   **Buat File DinoGameOverScreen.cpp**
   
   Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada DinoGameOverScreen.h:
+  * Konstruktor (Engine::DinoGameOverScreen::DinoGameOverScreen(Dino* dinoInstance)):
+    * Menerima pointer ke objek Dino sebagai argumen.
+    * Menginisialisasi anggota dino dengan pointer yang diterima, memungkinkan akses ke data dan fungsi di kelas Dino (misalnya, skor terbaik).
+  * Init():
+    * Membuat Tekstur: Membuat objek Texture dari file "buttons2.png".
+    * Membuat Sprite untuk Tombol: Membuat objek Sprite untuk setiap tombol ("Retry", "Main Menu", "Exit"), menggunakan tekstur yang telah dimuat. Animasi tombol dikonfigurasi menggunakan SetNumXFrames, SetNumYFrames, AddAnimation, dan SetAnimationDuration.
+    * Membuat Tombol:
+      * Membuat objek Button untuk setiap tombol, menggunakan sprite yang sesuai.
+      * SetPosition digunakan untuk menempatkan tombol di layar. Perhitungan posisi biasanya relatif terhadap ukuran layar.
+      * Tombol-tombol ditambahkan ke vektor buttons.
+    * Membuat Teks "Game Over": Membuat objek Text untuk menampilkan "Game Over". Font, ukuran font, shader, posisi, dan warna teks diatur.
+    * Membuat Teks Skor Terbaik: Membuat objek Text untuk menampilkan skor terbaik. Teks awal diatur menggunakan dino->GetBestScore(). Font, ukuran font, shader, posisi, dan warna teks diatur.
+    * Input Mapping: Mendaftarkan tombol panah atas/bawah (SDLK_UP, SDLK_DOWN) untuk navigasi, dan Enter (SDLK_RETURN) untuk memilih tombol.
+    * Mengatur Tombol Aktif: currentButtonIndex = 0; Mengatur tombol "Retry" (indeks 0) sebagai tombol aktif awal. Status tombol diubah ke HOVER.
+  * Update():
+    * Warna Latar Belakang: game->SetBackgroundColor(52, 155, 235); Mengatur warna latar belakang.
+    * Memproses Input:
+      * Navigasi:
+        * if (game->GetInputManager()->IsKeyReleased("next")): Jika tombol "next" (panah bawah) dilepas:
+          * Status tombol sebelumnya diubah ke NORMAL.
+          * currentButtonIndex diinkrementasi (dengan logika modulo untuk loop melingkar).
+          * Status tombol baru diubah ke HOVER.
+        * if (game->GetInputManager()->IsKeyReleased("prev")): Logika yang sama untuk tombol "prev" (panah atas), tetapi currentButtonIndex didekrementasi.
+      * Memilih Tombol:
+        * if (game->GetInputManager()->IsKeyReleased("press")): Jika tombol "press" (Enter) dilepas:
+          * Status tombol diubah ke PRESS.
+          * Periksa nama tombol:
+            * Jika "retry", ganti layar ke "dino" (layar permainan).
+            * Jika "mainmenu", ganti layar ke "mainmenu".
+            * Jika "exit", keluar dari game.
+      * Update Tombol: Memanggil Update() pada setiap tombol untuk memperbarui animasi.
+  * Draw():
+    * Menggambar Tombol: Loop melalui vektor buttons dan panggil Draw() pada setiap tombol.
+    * Menggambar Teks: Menggambar teks "Game Over" dan skor terbaik.
+    * SetBestScoreText(): Memperbarui teks skor terbaik dengan memanggil bestScoreText->SetText(...). Fungsi ini menggunakan dino->GetBestScore() untuk mendapatkan skor terbaik terbaru dan menggabungkannya ke dalam string yang akan ditampilkan.
   
 </details>
 <details>
