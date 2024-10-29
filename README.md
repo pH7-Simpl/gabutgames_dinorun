@@ -79,15 +79,64 @@ Ini adalah implementasi sederhana dari game Dino klasik yang biasa ditemukan di 
     
 </details>
 <details>
-  <summary>2. Buat Main Class Dino</summary>
+  <summary>2. Buat Main Class Dino sebagai Class Manager</summary>
 
-  isi
+  **Buat File Header Dino.h**
+  
+  Berisi variabel-variabel berikut:
+  * Music* music = NULL;: Pointer ke objek Music. Digunakan untuk mengelola musik latar. NULL menunjukkan bahwa pointer belum menunjuk ke objek apa pun saat inisialisasi.
+  * Sound* sound = NULL;: Pointer ke objek Sound. Digunakan untuk mengelola efek suara. NULL menunjukkan bahwa pointer belum menunjuk ke objek apa pun saat inisialisasi.
+  * int score = 0;: Variabel integer untuk menyimpan skor saat ini. Diinisialisasi dengan nilai 0.
+  * int bestScore = 0;: Variabel integer untuk menyimpan skor terbaik. Diinisialisasi dengan nilai 0.
+    
+  Deklarasikan fungsi yang ada pada Dino.cpp:
+  * Dino(Setting* setting): Konstruktor. Menerima pointer ke objek Setting yang berisi konfigurasi game.
+  * ~Dino(): Destruktor. Bertugas membersihkan resource yang dialokasikan oleh objek Dino.
+  * Init(): Fungsi untuk inisialisasi game, seperti memuat aset, membuat objek game, dan mengatur layar awal.
+  * Update(): Fungsi yang dipanggil setiap frame untuk memperbarui logika game.
+  * Render(): Fungsi yang dipanggil setiap frame untuk menggambar game di layar.
+  * GetScore() const: Fungsi getter untuk mendapatkan nilai skor saat ini. const menandakan bahwa fungsi ini tidak akan mengubah state dari objek Dino.
+  * SetScore(int x): Fungsi setter untuk mengatur nilai skor saat ini.
+  * GetBestScore() const: Fungsi getter untuk mendapatkan nilai skor terbaik. const menandakan bahwa fungsi ini tidak akan mengubah state dari objek Dino. Terdapat deklarasi ganda dalam kode yang Anda berikan, dan ini harus dihapus.
+  * SetBestScore(int x): Fungsi setter untuk mengatur nilai skor terbaik.
+    
+  **Buat File Dino.cpp**
+  
+  Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada Dino.h:
+  * Konstruktor (Engine::Dino::Dino(Setting* setting)):
+    * Menerima pointer ke objek Setting yang berisi konfigurasi game (resolusi layar, target frame rate, dll.).
+    * Memanggil konstruktor base class Engine::Game(setting) untuk menginisialisasi engine dengan pengaturan yang diberikan.
+    * Mengatur judul jendela game dengan setting->windowTitle = "Dino Game";. Tidak ada perhitungan khusus di sini, hanya pengaturan nilai string.
+  * Destruktor (Engine::Dino::~Dino()): Kosong karena tidak ada alokasi memori dinamis yang perlu di-dealokasikan secara manual dalam kelas Dino. Engine akan menangani dealokasi resource yang dibuat oleh base class Game.
+  * Init():
+    * Inisialisasi ScreenManager:
+      * Engine::ScreenManager::GetInstance(this): Mendapatkan instance singleton dari ScreenManager. this pointer diteruskan agar ScreenManager tahu game mana yang sedang dijalankan.
+      * AddScreen(...): Menambahkan layar-layar game ke ScreenManager. Setiap layar diidentifikasi dengan nama string (misalnya, "dino", "mainmenu"). Sebuah objek layar baru dibuat dan pointer-nya disimpan di ScreenManager.
+      * SetCurrentScreen("mainmenu"): Mengatur layar awal game ke layar menu utama ("mainmenu").
+  * Inisialisasi Skor:
+    * score = 0;: Mengatur skor awal menjadi 0. Tidak ada perhitungan, hanya inisialisasi nilai integer.
+  * Inisialisasi Musik dan Suara:
+    * music = (new Music(...))->SetVolume(40)->Play(true);: Membuat objek Music, mengatur volumenya, dan memainkannya secara berulang (looping).
+    * sound = (new Sound(...))->SetVolume(100);: Membuat objek Sound untuk efek suara lompat dan mengatur volumenya.
+  * Update():
+    * Engine::ScreenManager::GetInstance(this)->Update();: Memanggil fungsi Update() pada ScreenManager. Ini akan meneruskan pemanggilan Update() ke layar yang sedang aktif. Tidak ada perhitungan langsung di fungsi ini, hanya delegasi ke ScreenManager.
+  * Render():
+    * Engine::ScreenManager::GetInstance(this)->Draw();: Memanggil fungsi Draw() pada ScreenManager. Ini akan meneruskan pemanggilan Draw() ke layar yang sedang aktif. Sama seperti Update(), tidak ada perhitungan langsung di fungsi ini, hanya delegasi ke ScreenManager.
+  * GetScore(), SetScore(), GetBestScore(), SetBestScore(): Fungsi-fungsi getter dan setter sederhana untuk mengakses dan memodifikasi nilai score dan bestScore. Tidak ada perhitungan khusus, hanya pengaksesan dan pengaturan nilai integer.
   
 </details>
 <details>
   <summary>3. Buat Layar Main Menu</summary>
 
-  isi
+  **Buat File Header DinoMainMenuScreen.h**
+  
+  Berisi variabel-variabel berikut:
+
+  Deklarasikan fungsi yang ada pada DinoMainMenuScreen.cpp:
+  
+  **Buat File DinoMainMenuScreen.cpp**
+  
+  Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada DinoMainMenuScreen.h:
   
 </details>
 <details>
@@ -173,19 +222,43 @@ Ini adalah implementasi sederhana dari game Dino klasik yang biasa ditemukan di 
 <details>
   <summary>5. Buat Class Cactus sebagai rintangan</summary>
 
-  isi
+  **Buat File Header Cactus.h**
+  
+  Berisi variabel-variabel berikut:
+
+  Deklarasikan fungsi yang ada pada Cactus.cpp:
+  
+  **Buat File Cactus.cpp**
+  
+  Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada Cactus.h:
   
 </details>
 <details>
   <summary>6. Buat Layar Game Over</summary>
 
-  isi
+  **Buat File Header DinoGameOverScreen.h**
+  
+  Berisi variabel-variabel berikut:
+
+  Deklarasikan fungsi yang ada pada DinoGameOverScreen.cpp:
+  
+  **Buat File DinoGameOverScreen.cpp**
+  
+  Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada DinoGameOverScreen.h:
   
 </details>
 <details>
   <summary>7. Buat Layar Pause</summary>
 
-  isi
+  **Buat File Header DinoPauseScreen.h**
+  
+  Berisi variabel-variabel berikut:
+
+  Deklarasikan fungsi yang ada pada DinoPauseScreen.cpp:
+  
+  **Buat File DinoPauseScreen.cpp**
+  
+  Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada DinoPauseScreen.h:
   
 </details>
 <details>
