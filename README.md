@@ -262,12 +262,67 @@ Ini adalah implementasi sederhana dari game Dino klasik yang biasa ditemukan di 
   **Buat File Header Cactus.h**
   
   Berisi variabel-variabel berikut:
-
+  * Sprite* sprite = NULL;: Pointer ke objek Sprite yang digunakan untuk menggambar kaktus. Diinisialisasi dengan NULL.
+  * CactusState state;: Variabel bertipe CactusState (sebuah enum class) yang merepresentasikan status kaktus (SPAWN, GROUND, atau DIE).
+  * float groundDur = 0;: Durasi (dalam milidetik) kaktus berada di status GROUND. Diinisialisasi dengan 0.
+  * float groundTime = 0;: Waktu total (dalam milidetik) kaktus akan berada di status GROUND sebelum berubah ke status DIE. Diinisialisasi dengan 0. Nilai ini kemungkinan diinisialisasi di konstruktor pada file .cpp.
+  * float x = 0, y = 0;: Posisi awal kaktus (x dan y). Diinisialisasi dengan 0. Nilai-nilai ini tidak digunakan langsung untuk menggambar kaktus, tetapi lebih sebagai variabel bantu. Posisi sebenarnya dikelola oleh objek Sprite.
+  * float xVelocity = 0.2f;: Kecepatan horizontal kaktus.
+  
   Deklarasikan fungsi yang ada pada Cactus.cpp:
+  * Cactus(Sprite* sprite);: Konstruktor. Menerima pointer ke objek Sprite.
+  * ~Cactus();: Destruktor.
+  * Update(float deltaTime);: Memperbarui status dan posisi kaktus berdasarkan waktu yang berlalu (deltaTime).
+  * Draw();: Menggambar kaktus di layar.
+  * SetPosition(float x, float y);: Mengatur posisi kaktus. Mengembalikan pointer ke objek Cactus itu sendiri (memungkinkan method chaining).
+  * SetSpawn();: Mengatur status kaktus ke SPAWN. Mengembalikan pointer ke objek Cactus.
+  * GetWidth();: Mendapatkan lebar kaktus.
+  * GetHeight();: Mendapatkan tinggi kaktus.
+  * IsDie();: Memeriksa apakah kaktus dalam status DIE.
+  * GetX();: Mendapatkan posisi x kaktus.
+  * GetY();: Mendapatkan posisi y kaktus.
+  * Sprite* GetSprite();: Mengembalikan pointer ke objek Sprite kaktus.
+  * Cactus* SetCactusState(CactusState state);: Mengatur status kaktus. Mengembalikan pointer ke objek Cactus.
+  * float GetXVelocity() const;: Mengembalikan kecepatan horizontal kaktus. const menandakan fungsi ini tidak mengubah state objek.
+  * void SetXVelocity(float x);: Mengatur kecepatan horizontal kaktus.
   
   **Buat File Cactus.cpp**
   
   Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada Cactus.h:
+  * Konstruktor (Engine::Cactus::Cactus(Sprite* sprite)):
+    * Menerima pointer ke objek Sprite yang akan digunakan untuk menggambar kaktus.
+    * Menginisialisasi anggota sprite dengan pointer yang diterima.
+    * Mengatur status awal kaktus ke DIE.
+    * Mengatur groundDur ke 0.
+    * Mengatur groundTime ke 1000 (1 detik).
+  * Destruktor (Engine::Cactus::~Cactus()): Kosong. Tidak ada alokasi memori dinamis yang perlu dibersihkan secara manual dalam kelas ini. Objek Sprite kemungkinan dikelola di tempat lain (misalnya, dengan object pooling).
+  * Update(float deltaTime):
+    * Jika status kaktus adalah DIE, fungsi langsung keluar (return).
+    * Mendapatkan posisi x dan y kaktus menggunakan GetX() dan GetY().
+    * State Spawn: Jika state adalah SPAWN dan posisi x kaktus kurang dari atau sama dengan -70 (kaktus telah melewati batas tertentu di sebelah kiri layar), state diubah ke GROUND.
+    * State Ground: Jika state adalah GROUND:
+      * groundDur ditambah dengan deltaTime.
+      * Jika groundDur lebih dari atau sama dengan groundTime (kaktus telah berada di tanah selama groundTime), state kaktus diubah ke DIE dan groundDur di-reset ke 0.
+    * Pergerakan Kaktus:
+      * x -= xVelocity * deltaTime;: Mengurangi posisi x kaktus berdasarkan kecepatan horizontal (xVelocity) dan waktu yang berlalu (deltaTime). Ini menciptakan pergerakan kaktus ke kiri. Ini adalah perhitungan inti untuk pergerakan kaktus.
+    * Memperbarui posisi sprite kaktus dengan sprite->SetPosition(x, y);.
+    * Memperbarui animasi sprite (jika ada) dengan sprite->Update(deltaTime);.
+  * Draw():
+    * Jika status kaktus adalah DIE, fungsi langsung keluar (return).
+    * Menggambar sprite kaktus dengan sprite->Draw();.
+  * SetPosition(float x, float y):
+    * Mengatur posisi sprite kaktus menggunakan sprite->SetPosition(x, y);.
+    * Mengembalikan this (pointer ke objek Cactus itu sendiri). Ini memungkinkan method chaining.
+  * SetSpawn(): Mengatur status kaktus ke SPAWN dan mengembalikan this.
+  * GetWidth(): Mengembalikan lebar sprite kaktus menggunakan sprite->GetScaleWidth();.
+  * GetHeight(): Mengembalikan tinggi sprite kaktus menggunakan sprite->GetScaleHeight();.
+  * IsDie(): Mengembalikan true jika status kaktus adalah DIE, false jika sebaliknya.
+  * GetX(): Mengembalikan posisi x sprite kaktus menggunakan sprite->GetPosition().x;.
+  * GetY(): Mengembalikan posisi y sprite kaktus menggunakan sprite->GetPosition().y;.
+  * GetSprite(): Mengembalikan pointer ke objek Sprite kaktus.
+  * SetCactusState(CactusState state): Mengatur state kaktus dan mengembalikan this.
+  * GetXVelocity() const: Mengembalikan kecepatan horizontal kaktus (xVelocity).
+  * SetXVelocity(float x): Mengatur kecepatan horizontal kaktus (xVelocity).
   
 </details>
 <details>
