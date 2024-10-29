@@ -131,12 +131,49 @@ Ini adalah implementasi sederhana dari game Dino klasik yang biasa ditemukan di 
   **Buat File Header DinoMainMenuScreen.h**
   
   Berisi variabel-variabel berikut:
-
+  * std::vector<Button*> buttons;: Vektor yang berisi pointer ke objek-objek Button. Ini digunakan untuk menyimpan dan mengelola tombol-tombol di menu utama (misalnya, "Play", "Exit"). Vektor memungkinkan penambahan dan penghapusan tombol secara dinamis.
+  * Text* text;: Pointer ke objek Text. Digunakan untuk menampilkan teks judul di menu utama (misalnya, "Dino Game").
+  * int currentButtonIndex = 0;: Variabel integer yang menyimpan indeks tombol yang sedang dipilih dalam vektor buttons. Nilai 0 menunjukkan tombol pertama dalam vektor.
+  
   Deklarasikan fungsi yang ada pada DinoMainMenuScreen.cpp:
+  * DinoMainMenuScreen();: Konstruktor default. Tidak menerima argumen.
+  * Init() override;: Fungsi untuk inisialisasi layar menu utama. override keyword menandakan bahwa fungsi ini meng-override fungsi virtual di base class (Screen). Inisialisasi biasanya meliputi pembuatan tombol, teks, dan pengaturan input mapping.
+  * Update() override;: Fungsi yang dipanggil setiap frame untuk memperbarui logika layar menu utama. Ini biasanya memproses input pemain (navigasi menu, memilih tombol) dan memperbarui status tombol.
+  * Draw() override;: Fungsi yang dipanggil setiap frame untuk menggambar layar menu utama. Ini menggambar tombol dan teks di layar.
   
   **Buat File DinoMainMenuScreen.cpp**
   
   Berisi implementasi dari fungsi-fungsi yang dideklarasikan pada DinoMainMenuScreen.h:
+  * Konstruktor (Engine::DinoMainMenuScreen::DinoMainMenuScreen()): Menginisialisasi pointer text ke NULL. Ini penting untuk menghindari perilaku yang tidak terdefinisi saat mencoba mengakses pointer yang belum diinisialisasi.
+  * Init():
+    * Membuat Tekstur: Membuat objek Texture dari file gambar "buttons2.png". Tekstur ini akan digunakan untuk sprite tombol.
+    * Membuat Sprite: Membuat objek Sprite untuk tombol "Play" dan "Exit", menggunakan tekstur yang telah dimuat. SetNumXFrames, SetNumYFrames, AddAnimation, SetAnimationDuration digunakan untuk mengkonfigurasi animasi tombol.
+    * Membuat Tombol:
+      * Membuat objek Button untuk "Play" dan "Exit", menggunakan sprite yang sesuai.
+      * SetPosition digunakan untuk menempatkan tombol di layar. Perhitungan posisi biasanya relatif terhadap ukuran layar.
+      * Tombol-tombol ditambahkan ke vektor buttons.
+    * Membuat Teks Judul: Membuat objek Text untuk judul "Dino Game" menggunakan font dan shader yang ditentukan. SetPosition dan SetColor digunakan untuk mengatur posisi dan warna teks.
+    * Input Mapping: Mendaftarkan tombol panah atas/bawah (SDLK_UP, SDLK_DOWN) untuk navigasi menu, dan tombol Enter (SDLK_RETURN) untuk memilih tombol.
+    * Mengatur Tombol Aktif: currentButtonIndex = 0; Mengatur tombol "Play" (indeks 0) sebagai tombol yang aktif/dipilih saat menu pertama kali ditampilkan. buttons[currentButtonIndex]->SetButtonState(Engine::ButtonState::HOVER); Mengatur status tombol yang dipilih ke HOVER.
+  * Update():
+    * Mengatur Warna Latar Belakang: game->SetBackgroundColor(52, 155, 235); Mengatur warna latar belakang layar. Nilai RGB (Red, Green, Blue) digunakan.
+    * Memproses Input:
+      * Navigasi Menu:
+        * if (game->GetInputManager()->IsKeyReleased("next")): Jika tombol "next" (panah bawah) dilepas:
+          * Ubah status tombol yang sebelumnya dipilih menjadi NORMAL.
+          * Pindahkan currentButtonIndex ke tombol berikutnya dalam vektor buttons. Logika modulo (%) digunakan untuk memastikan indeks tetap dalam batas vektor.
+          * Ubah status tombol yang baru dipilih menjadi HOVER.
+        * if (game->GetInputManager()->IsKeyReleased("prev")): Logika yang sama untuk tombol "prev" (panah atas), tetapi currentButtonIndex dikurangi.
+      * Memilih Tombol:
+        * if (game->GetInputManager()->IsKeyReleased("press")): Jika tombol "press" (Enter) dilepas:
+          * Ubah status tombol yang dipilih menjadi PRESS.
+          * Periksa nama tombol (GetButtonName()):
+            * Jika "play", ganti layar ke "dino" (layar permainan).
+            * Jika "exit", keluar dari game.
+    * Update Tombol: b->Update(game->GetGameTime()); Memanggil fungsi Update() pada setiap tombol dalam vektor buttons. Ini memungkinkan tombol untuk memperbarui animasinya (misalnya, efek hover).
+  * Draw():
+    * Menggambar Tombol: Loop melalui vektor buttons dan panggil b->Draw() pada setiap tombol untuk menggambarnya di layar.
+    * Menggambar Teks Judul: text->Draw(); Menggambar teks judul di layar.
   
 </details>
 <details>
