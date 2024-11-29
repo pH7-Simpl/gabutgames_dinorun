@@ -15,6 +15,7 @@ namespace Engine {
 		void Draw();
 		ScreenManager* AddScreen(string name, Screen* screen);
 		ScreenManager* SetCurrentScreen(string name);
+		ScreenManager* RemoveScreen(string name);
 		Screen* GetCurrentScreen();
 		Game* GetGame();
 	    ScreenManager* SetGame(Game* engine);

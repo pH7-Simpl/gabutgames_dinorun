@@ -26,6 +26,7 @@ namespace Engine {
 		Shader* setFloat(float i, string str);
 		Shader* setMat4(mat4 mat, string str);
 		Shader* setVec3(vec3 data, string str);
+		void setVec4(vec4 value, string str) const;
 		
 	private:
 		string vertexPath, fragmentPath;

@@ -26,6 +26,7 @@ namespace Engine {
 		Game(Setting* setting);
 		~Game();
 		void SetBackgroundColor(int r, int g, int b);
+		void SetBackgroundColor(int r, int g, int b, int a);
 		void Run();
 		mat4 GetDefaultProjection();
 		Shader* GetDefaultSpriteShader();

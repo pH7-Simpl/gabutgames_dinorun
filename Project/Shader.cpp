@@ -140,3 +140,13 @@ Engine::Shader* Shader::Build()
 
 	return this;
 }
+
+void Engine::Shader::setVec4(vec4 value, string str) const{
+	GLint location = glGetUniformLocation(this->programId, str.c_str());
+	if (location == -1) {
+		std::cerr << "Warning: uniform '" << str << "' not found or unused in shader program.\n";
+	}
+	else {
+		glUniform4f(location, value.r, value.g, value.b, value.a);
+	}
+}

@@ -45,20 +45,37 @@ void Sprite::Draw()
 	glDisable(GL_BLEND);
 }
 
-
 void Engine::Sprite::Update(float deltaTime)
 {
 	int n = GetTotalFrames();
-	if (!enableAnimation || currentAnim == NULL || n == 1)
+	if (!enableAnimation || currentAnim == nullptr || n <= 1)
 		return;
 
 	frameDuration += deltaTime;
 
 	if (frameDuration >= maxFrameDuration) {
 		frameDuration = 0;
-		frameIndex = (frameIndex < currentAnim->startFrameIndex || frameIndex >= currentAnim->endFrameIndex) ? currentAnim->startFrameIndex : frameIndex + 1;
+
+		if (frameIndex >= currentAnim->startFrameIndex && frameIndex < currentAnim->endFrameIndex) {
+			frameIndex++;
+		}
+		else if (playOnce) {
+			if (frameIndex >= currentAnim->endFrameIndex) {
+				// Stop the animation at the last frame
+				frameIndex = currentAnim->endFrameIndex;
+			}
+			else {
+				// Start the animation from the first frame
+				frameIndex = currentAnim->startFrameIndex;
+			}
+		}
+		else {
+			// Loop the animation if playOnce is false
+			frameIndex = currentAnim->startFrameIndex;
+		}
 	}
 }
+
 
 Engine::Sprite* Engine::Sprite::AddAnimation(string name, int startFrameIndex, int endFrameIndex)
 {
@@ -73,6 +90,15 @@ Engine::Sprite* Engine::Sprite::AddAnimation(string name, int startFrameIndex, i
 Engine::Sprite* Engine::Sprite::PlayAnim(string name)
 {
 	enableAnimation = true;
+	if (currentAnim != NULL && name == currentAnim->name) return this;
+	currentAnim = GetAnimData(name);
+	return this;
+}
+
+Engine::Sprite* Engine::Sprite::PlayAnim(string name, bool playOnce)
+{
+	enableAnimation = true;
+	this->playOnce = playOnce;
 	if (currentAnim != NULL && name == currentAnim->name) return this;
 	currentAnim = GetAnimData(name);
 	return this;
@@ -218,6 +244,7 @@ mat4 Sprite::CreateTransform()
 void Engine::Sprite::UpdateShaderData()
 {
 	shader->Use();
+	shader->setVec4(color, "u_Color");
 	shader->setInt(numXFrames, "nx");
 	shader->setInt(numYFrames, "ny");
 	shader->setInt(frameIndex, "frameIndex");
@@ -257,5 +284,11 @@ Sprite* Engine::Sprite::SetWireframe(bool wireframe)
 	return this;
 }
 
+Sprite* Engine::Sprite::SetColor(float r, float g, float b, float a) {
+	color = vec4(r, g, b, a);
+	return this;
+}
 
-
+vec4 Engine::Sprite::GetColor() const {
+	return color;
+}

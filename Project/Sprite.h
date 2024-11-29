@@ -25,6 +25,7 @@ namespace Engine {
 		void Update(float deltaTime);
 		Sprite* AddAnimation(string name, int startFrameIndex, int endFrameIndex);
 		Sprite* PlayAnim(string name);
+		Sprite* PlayAnim(string name, bool playOnce);
 		Sprite* SetFlipHorizontal(bool flipHorizontal);
 		Sprite* SetFlipVertical(bool flipVertical);
 		Sprite* SetAnimationDuration(float maxFrameDuration);
@@ -45,6 +46,8 @@ namespace Engine {
 		BoundingBox* GetBoundingBox();
 		vec2 GetPosition();
 		vec2 GetRotatedPoint(float x, float y);
+		Sprite* SetColor(float r, float g, float b, float a);
+		vec4 GetColor() const;
 	private:
 		BoundingBox* boundingBox;
 		vec4 min;
@@ -52,7 +55,7 @@ namespace Engine {
 		Quad* quad;
 		Texture* texture;
 		float width = 0, height = 0, s = 1, degree = 0, frameDuration = 0, maxFrameDuration = 80;
-		bool flipHorizontal = false, flipVertical = false, enableAnimation = false, wireframe = false;
+		bool flipHorizontal = false, flipVertical = false, enableAnimation = false, wireframe = false, playOnce = false;
 		int numXFrames = 1, numYFrames = 1, frameIndex = 0;
 		mat4 CreateTransform();
 		void UpdateShaderData();
@@ -60,6 +63,7 @@ namespace Engine {
 		vec2 position;
 		vector<AnimData*> animationData;
 		AnimData* currentAnim = NULL;
+		vec4 color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		
 	};
 }

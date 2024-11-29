@@ -35,6 +35,15 @@ Engine::ScreenManager* Engine::ScreenManager::SetCurrentScreen(string name)
 	return this;
 }
 
+Engine::ScreenManager* Engine::ScreenManager::RemoveScreen(string name) {
+	auto it = screens.find(name);
+	if (it != screens.end()) {
+		delete it->second;
+		screens.erase(it);
+	}
+	return this;
+}
+
 Engine::Screen* Engine::ScreenManager::GetCurrentScreen()
 {
 	return currentScreen;

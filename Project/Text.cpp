@@ -37,6 +37,8 @@ void Engine::Text::Draw()
 	float x = position.x;
 	float y = position.y;
 
+	// Define line height (you can adjust this depending on your font)
+	GLfloat lineHeight = TextCharacters['H'].Size.y * scale * 1.7; // Typically the height of an uppercase letter
 	// Activate corresponding render state
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -53,6 +55,13 @@ void Engine::Text::Draw()
 	string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++)
 	{
+		// If the current character is a newline, move the cursor to the next line
+		if (*c == '\n')
+		{
+			x = position.x;  // Reset X position
+			y -= lineHeight;  // Move down by line height
+			continue;  // Skip this iteration and move to the next character
+		}
 		TextCharacter ch = TextCharacters[*c];
 		GLfloat xpos = x + ch.Bearing.x * scale;
 		GLfloat ypos = y - (this->TextCharacters['H'].Bearing.y - ch.Bearing.y) * scale;

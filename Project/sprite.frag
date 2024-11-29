@@ -1,11 +1,15 @@
 #version 330 core
-in vec3 ourColor;
-in vec2 TexCoord;
+
+in vec2 TexCoord;    // Texture coordinates passed from vertex shader
 
 // Texture samplers
 uniform sampler2D ourTexture;
 
+// The uniform color (u_Color) that will be set from the application (C++ code)
+uniform vec4 u_Color;
+
 void main()
 {
-    gl_FragColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0f);
+    // Apply texture color with the uniform color (u_Color)
+    gl_FragColor = texture(ourTexture, TexCoord) * u_Color;
 }

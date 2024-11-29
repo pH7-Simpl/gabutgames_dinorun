@@ -22,6 +22,11 @@ void Engine::Game::SetBackgroundColor(int r, int g, int b)
 	glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
 }
 
+void Engine::Game::SetBackgroundColor(int r, int g, int b, int a)
+{
+	glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+}
+
 
 void Game::Run()
 {

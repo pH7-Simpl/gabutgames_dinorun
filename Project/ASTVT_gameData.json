@@ -1,0 +1,18 @@
+{
+    "items": 0,
+    "player": {
+        "health": 100,
+        "name": "Adaline",
+        "speed": 2,
+        "sword_damage": 25,
+        "x": 200,
+        "y": 100,
+        "zombie_count": 0
+    },
+    "story_phase": 0,
+    "zombie": {
+        "damage": 10,
+        "zombie_per_spawn": 2,
+        "zombie_to_defeat_per_wave": 10
+    }
+}

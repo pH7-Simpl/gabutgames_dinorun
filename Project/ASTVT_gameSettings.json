@@ -1,0 +1,14 @@
+{
+    "input": {
+        "attack": 32,
+        "move_down": 115,
+        "move_left": 97,
+        "move_right": 100,
+        "move_up": 119,
+        "next": 1073741905,
+        "pause": 27,
+        "pick_up": 102,
+        "press": 13,
+        "prev": 1073741906
+    }
+}

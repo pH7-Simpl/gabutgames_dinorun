@@ -70,13 +70,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../../deps/include/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>../../deps/include/;$(VC_IncludePath);$(WindowsSDK_IncludePath);../../deps/include/json-develop</IncludePath>
     <LibraryPath>../../deps/lib/SDL/;../../deps/lib/GL/;../../deps/lib/freetype/;../../deps/lib/SOIL/;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
     <OutDir>$(SolutionDir)\$(ProjectName)</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../../deps/include/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>../../deps/include/;$(VC_IncludePath);$(WindowsSDK_IncludePath);../../deps/include/json-develop</IncludePath>
     <LibraryPath>../../deps/lib/SDL/;../../deps/lib/GL/;../../deps/lib/freetype/;../../deps/lib/SOIL/;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
     <OutDir>$(SolutionDir)\$(ProjectName)</OutDir>
   </PropertyGroup>
@@ -146,6 +146,11 @@
     <None Include="text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AShroudedTomb_VeiledTruth.h" />
+    <ClInclude Include="ASTVTGameOverScreen.h" />
+    <ClInclude Include="ASTVTGameScreen.h" />
+    <ClInclude Include="ASTVTMainMenuScreen.h" />
+    <ClInclude Include="ASTVTPauseScreen.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="BaseCharacter.h" />
@@ -156,6 +161,7 @@
     <ClInclude Include="DinoMainMenuScreen.h" />
     <ClInclude Include="DinoPauseScreen.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Lesson11_ParallaxScrolling.h" />
     <ClInclude Include="LessonAI01_SteeringBehaviors.h" />
     <ClInclude Include="LessonAI02_NPCWave.h" />
@@ -188,8 +194,14 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Turtle.h" />
     <ClInclude Include="Zengame.h" />
+    <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AShroudedTomb_VeiledTruth.cpp" />
+    <ClCompile Include="ASTVTGameOverScreen.cpp" />
+    <ClCompile Include="ASTVTGameScreen.cpp" />
+    <ClCompile Include="ASTVTMainMenuScreen.cpp" />
+    <ClCompile Include="ASTVTPauseScreen.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="BaseCharacter.cpp" />
@@ -200,6 +212,7 @@
     <ClCompile Include="DinoMainMenuScreen.cpp" />
     <ClCompile Include="DinoPauseScreen.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Lesson11_ParallaxScrolling.cpp" />
     <ClCompile Include="LessonAI01_SteeringBehaviors.cpp" />
     <ClCompile Include="LessonAI02_NPCWave.cpp" />
@@ -233,6 +246,16 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Turtle.cpp" />
     <ClCompile Include="ZenGame.cpp" />
+    <ClCompile Include="Zombie.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="death.wav" />
+    <Media Include="item_drop.wav" />
+    <Media Include="mc_damage.wav" />
+    <Media Include="mc_death.wav" />
+    <Media Include="mc_walk.wav" />
+    <Media Include="sword_swing_hit.wav" />
+    <Media Include="sword_swing_miss.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

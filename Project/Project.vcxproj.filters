@@ -16,6 +16,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Project Akhir">
+      <UniqueIdentifier>{cf940a1f-2544-4548-a4ef-e2c3ac73a086}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="sprite.frag">
@@ -158,6 +161,27 @@
     <ClInclude Include="DinoPauseScreen.h">
       <Filter>Demo Files</Filter>
     </ClInclude>
+    <ClInclude Include="AShroudedTomb_VeiledTruth.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTVTGameScreen.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTVTMainMenuScreen.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTVTPauseScreen.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTVTGameOverScreen.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shader.cpp">
@@ -289,5 +313,49 @@
     <ClCompile Include="DinoPauseScreen.cpp">
       <Filter>Demo Files</Filter>
     </ClCompile>
+    <ClCompile Include="AShroudedTomb_VeiledTruth.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTVTGameScreen.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTVTMainMenuScreen.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTVTPauseScreen.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTVTGameOverScreen.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="item_drop.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
+    <Media Include="mc_damage.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
+    <Media Include="mc_death.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
+    <Media Include="mc_walk.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
+    <Media Include="sword_swing_hit.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
+    <Media Include="sword_swing_miss.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
+    <Media Include="death.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>
