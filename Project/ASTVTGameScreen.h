@@ -36,6 +36,7 @@ namespace Engine {
 		void PlayerHitMechanism();
 		int Clamp(int value, int min, int max);
 	private:
+		bool debug = false;
 		Texture* dotTexture = NULL;
 		Texture* sword_texture = NULL;
 		Sprite* sword_sprite = NULL;
@@ -44,7 +45,7 @@ namespace Engine {
 		Text* debugText = NULL;
 		float x = 0, y = 0, attack_cooldown = 0, lerp_duration = 0, naration_bg_f = 0, master_time = 0.0f;
 		int narration_phase = 0, current_page_index = 0;
-		bool attacking = false, debug = true, fade_in = false;
+		bool attacking = false, fade_in = false;
 		vector<Sprite*> dotSprites;
 		void SwordMovement(int direction);
 		Sprite* narration_bg = NULL;
