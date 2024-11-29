@@ -16,15 +16,11 @@ void Engine::AShroudedTomb_VeiledTruth::Init()
     mc_texture2 = new Texture("mc2.png");
     mc_sprite1 = new Sprite(mc_texture1, defaultSpriteShader, defaultQuad);
     mc_sprite2 = new Sprite(mc_texture2, defaultSpriteShader, defaultQuad);
-    Texture* item1_texture = new Texture("Item1.png");
-    Texture* item2_texture = new Texture("Item2.png");
-    Texture* item3_texture = new Texture("Item3.png");
-    Item* item1 = new Item("puzzle_item1", new Sprite(item1_texture, defaultSpriteShader, defaultQuad), this);
-    Item* item2 = new Item("puzzle_item2", new Sprite(item2_texture, defaultSpriteShader, defaultQuad), this);
-    Item* item3 = new Item("puzzle_item3", new Sprite(item3_texture, defaultSpriteShader, defaultQuad), this);
-    items_to_collect.push_back(item1);
-    items_to_collect.push_back(item2);
-    items_to_collect.push_back(item3);
+    for (int i = 0; i < 3; i++) {
+        Texture* texture = new Texture("Item" + std::to_string(i + 1) + ".png");
+        Item* item = new Item("puzzle_item" + std::to_string(i + 1), new Sprite(texture, defaultSpriteShader, defaultQuad), this);
+        items_to_collect.push_back(item);
+    }
     for (int i = 0; i < items_to_collect.size(); i++) {
         items_to_collect[i]->Init();
     }
@@ -126,9 +122,9 @@ void Engine::AShroudedTomb_VeiledTruth::ResetGame() {
     gameData["player"] = {
         {"name", "Adaline"},
         {"health", 100},
-        {"speed", 2},
-        {"x", 200},
-        {"y", 100},
+        {"speed", 2.0},
+        {"x", 200.0},
+        {"y", 100.0},
         {"zombie_count", 0},
         {"sword_damage", 25},
     };
