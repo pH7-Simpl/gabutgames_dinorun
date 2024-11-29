@@ -54,9 +54,6 @@ namespace Engine {
 		Sprite* mc_sprite2 = NULL;
 		Texture* mc_texture1 = NULL;
 		Texture* mc_texture2 = NULL;
-		Sound* mc_attack_hit = NULL;
-		Sound* mc_attack_miss = NULL;
-		Sound* mc_die = NULL;
 	private:
 		string playerName = "Adaline";
 		int playerHealth = 100;
