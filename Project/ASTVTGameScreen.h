@@ -10,9 +10,11 @@
 #include "Zombie.h"
 #include "AShroudedTomb_VeiledTruth.h"
 #include "Sound.h"
+#include "BrokenHeart.h"
 
 namespace Engine {
 	class AShroudedTomb_VeiledTruth;
+	class BrokenHeart;
 	class ASTVTGameScreen :
 		public Engine::Screen
 	{
@@ -69,7 +71,11 @@ namespace Engine {
 		Sound* mc_walk = NULL;
 		Sound* sword_swing_hit = NULL;
 		Sound* sword_swing_miss = NULL;
-
+		Sprite* heart_sprite = NULL;
+		Text* player_hp_text = NULL;
+		Sprite* skull_sprite = NULL;
+		Text* zombie_count = NULL;
+		BrokenHeart* player_broken_heart = NULL;
 	};
 }
 

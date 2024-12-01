@@ -13,7 +13,6 @@ void Engine::ASTVTGameScreen::Init()
 	zombie_texture = new Texture("zombiee.png");
 	background_sprite = (new Sprite(bgTexture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetSize((float)game->GetSettings()->screenWidth, (float)game->GetSettings()->screenHeight);
 	narration_bg = (new Sprite(naration_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetSize((float)game->GetSettings()->screenWidth, (float)game->GetSettings()->screenHeight);
-
 	sword_sprite = new Sprite(sword_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad());
 	sword_sprite->SetPosition(200, 50)->SetScale(1.0f)->SetNumXFrames(1)->SetNumYFrames(1)->SetBoundingBoxSize(sword_sprite->GetScaleWidth(),sword_sprite->GetScaleHeight());
 	item_drop = (new Sound("item_drop.wav"))->SetVolume(100);
@@ -26,13 +25,35 @@ void Engine::ASTVTGameScreen::Init()
 	debugText = new Text("lucon.ttf", 24, game->GetDefaultTextShader());
 	narration_text->SetScale(2.2f)->SetColor(64, 64, 64)->SetPosition(150, game->GetSettings()->screenHeight - 150);
 	debugText->SetScale(2.2f)->SetColor(64, 64, 64)->SetPosition((game->GetSettings()->screenWidth) / 2, game->GetSettings()->screenHeight - (debugText->GetFontSize() * debugText->GetScale()) - 100);
+	Texture* broken_heart_texture = new Texture("broken_heart.png");
+	Texture* heart_texture = new Texture("heart.png");
+	Texture* skull_texture = new Texture("skeleton.png");
+	heart_sprite = (new Sprite(heart_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetScale(0.1f);
+	skull_sprite = (new Sprite(skull_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetScale(0.07f);
+	float topUIX = 20;
+	float topImageUIY = game->GetSettings()->screenHeight - heart_sprite->GetScaleHeight();
+	float topTextUIY = game->GetSettings()->screenHeight - heart_sprite->GetScaleHeight() / 1.5;
+	heart_sprite->SetPosition(topUIX, topImageUIY);
+	topUIX += heart_sprite->GetScaleWidth() - 10;
+	player_hp_text = (new Text("lucon.ttf", 24, game->GetDefaultTextShader()))->SetPosition(topUIX, topTextUIY);
+	topUIX += 60;
+	skull_sprite->SetPosition(topUIX, topImageUIY + 10);
+	topUIX += skull_sprite->GetScaleWidth();
+	zombie_count = (new Text("lucon.ttf", 24, game->GetDefaultTextShader()))->SetPosition(topUIX, topTextUIY);
+	Sprite* zombie_broken_heart_sprite = (new Sprite(broken_heart_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetScale(0.06f);
+	player_broken_heart = new BrokenHeart(zombie_broken_heart_sprite);
+
+
 
 	// Spawn cactus setting
 	maxZombieSpawnTime = 500;
 	numZombieInPool = 100;
 
 	for (int i = 0; i < numZombieInPool; i++) {
-		Zombie* zombie =  new Zombie(CreateZombieSprite(), (new Sprite(sword_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetBoundingBoxSize(72, 72));
+		Sprite* zombie_hand_sprite = (new Sprite(sword_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetBoundingBoxSize(72, 72);
+		Sprite* zombie_broken_heart_sprite = (new Sprite(broken_heart_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetScale(0.06f)->SetPosition(-300, -300);
+		BrokenHeart* zombie_broken_heart = new BrokenHeart(zombie_broken_heart_sprite);
+		Zombie* zombie =  new Zombie(CreateZombieSprite(), zombie_hand_sprite, zombie_broken_heart);
 		astvt->zombies.push_back(zombie);
 	}
 
@@ -65,6 +86,9 @@ void Engine::ASTVTGameScreen::Update()
 	}
 	astvt->mc_sprite1->Update(game->GetGameTime());
 	astvt->mc_sprite2->Update(game->GetGameTime());
+	player_hp_text->SetText(to_string(astvt->GetPlayerHealth()));
+	zombie_count->SetText(to_string(astvt->GetZombieCount()));
+	player_broken_heart->Update(game->GetGameTime(), astvt->mc_sprite1->GetPosition().x + 13.0f, astvt->mc_sprite1->GetPosition().y + astvt->mc_sprite1->GetScaleHeight() - 5.0f);
 	CharacterMovement();
 	// Debugging codes
 	if (debug) {
@@ -171,6 +195,11 @@ void Engine::ASTVTGameScreen::Draw()
 	for (int i = 0; i < astvt->items_to_collect.size(); i++) {
 		astvt->items_to_collect[i]->Draw();
 	}
+	heart_sprite->Draw();
+	player_hp_text->Draw();
+	skull_sprite->Draw();
+	zombie_count->Draw();
+	player_broken_heart->Draw();
 	
 	//Debugging Draws
 	if (debug) {
@@ -259,8 +288,9 @@ void Engine::ASTVTGameScreen::PlayerHitMechanism() {
 	for (Zombie* zombie : astvt->zombies) {
 		if (hitCooldown <= 0.0f &&
 			zombie->GetHandSprite()->GetBoundingBox()->CollideWith(astvt->mc_sprite1->GetBoundingBox())) {
-			// Zombie takes damage
+			// Player takes damage
 			astvt->SetPlayerHealth(astvt->GetPlayerHealth() - astvt->GetZombieDamage());
+			player_broken_heart->ShowBrokenHeart();
 			mc_damage->Play(false);
 			astvt->mc_sprite1->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 			astvt->mc_sprite2->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -614,6 +644,7 @@ void Engine::ASTVTGameScreen::ZombieRegulator() {
 			// Check if zombie is in cooldown
 			if (zombie->GetHitCooldown() <= 0.0f &&
 				zombie->GetSprite()->GetBoundingBox()->CollideWith(sword_sprite->GetBoundingBox())) {
+				zombie->ShowBrokenHeart();
 				// Zombie takes damage
 				sword_swing_hit->Play(false);
 				zombie->SetHealth(zombie->GetHealth() - astvt->GetSwordDamage());

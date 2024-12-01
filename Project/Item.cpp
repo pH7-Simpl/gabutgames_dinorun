@@ -28,7 +28,9 @@ void Engine::Item::Update(float deltaTime)
 		}
 	}
 	sprite->Update(deltaTime);
-	MoveUpdown(deltaTime);
+	if ((sprite->GetPosition().x != -300) && (sprite->GetPosition().y != -300)) {
+		MoveUpdown(deltaTime);
+	}
 }
 
 void Engine::Item::Draw()
@@ -47,10 +49,11 @@ void Engine::Item::MoveUpdown(float deltaTime)
 
 	// Apply movement
 	if (lerp_movement >= 50.0f) {
-		y += (mul *= (f <= 0.0f || f >= 1.0f) ? -1 : 1) * 0.02f;
+		f += (mul *= (f <= 0.0f || f >= 1.0f) ? -1 : 1) * 0.05f;
+		sprite->SetPosition(x, y+f*mul*(-1));
+		lerp_movement = 0;
 	}
 	lerp_movement += deltaTime;
-	sprite->SetPosition(x, y);
 }
 
 
@@ -59,7 +62,7 @@ Engine::Item* Engine::Item::SetPosition(float x, float y)
 {
 	sprite->SetPosition(x, y);
 	text_box_sprite->SetPosition(x + sprite->GetScaleWidth() / 4, y + sprite->GetScaleHeight() / 2);
-	text_inside_box->SetPosition(x + sprite->GetScaleWidth() / 1.8, y + sprite->GetScaleHeight() * 2.2);
+	text_inside_box->SetPosition(x + sprite->GetScaleWidth() / 1.8f, y + sprite->GetScaleHeight() * 2.2f);
 	return this;
 }
 

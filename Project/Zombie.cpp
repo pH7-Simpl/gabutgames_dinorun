@@ -1,9 +1,10 @@
 #include "Zombie.h"
 
-Engine::Zombie::Zombie(Sprite* sprite, Sprite* hand_sprite)
+Engine::Zombie::Zombie(Sprite* sprite, Sprite* hand_sprite, BrokenHeart* broken_heart)
 {
 	this->sprite = sprite;
 	this->hand_sprite = hand_sprite;
+	this->broken_heart = broken_heart;
 	state = Engine::ZombieState::DIE;
 	groundDur = 0;
 	groundTime = 1000;
@@ -34,6 +35,7 @@ void Engine::Zombie::Update(float deltaTime)
 		}
 		groundDur += deltaTime;
 	}
+	broken_heart->Update(deltaTime, sprite->GetPosition().x + 13.0f, sprite->GetPosition().y + sprite->GetScaleHeight() - 5.0f);
 	sprite->Update(deltaTime);
 }
 
@@ -42,7 +44,7 @@ void Engine::Zombie::Draw()
 	if (state == Engine::ZombieState::DIE) {
 		return;
 	}
-
+	broken_heart->Draw();
 	sprite->Draw();
 }
 
@@ -171,6 +173,11 @@ float Engine::Zombie::GetHealth() const {
 
 float Engine::Zombie::GetSpeed() const {
 	return speed;
+}
+
+void Engine::Zombie::ShowBrokenHeart()
+{
+	broken_heart->ShowBrokenHeart();
 }
 
 void Engine::Zombie::SetHealth(float x) {

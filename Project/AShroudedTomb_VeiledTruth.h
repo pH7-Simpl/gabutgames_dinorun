@@ -39,7 +39,7 @@ namespace Engine {
 		void SetZombieCount(float x);
 		int GetZombieCount() const;
 		void SetPlayerHealth(float x);
-		float GetPlayerHealth() const;
+		int GetPlayerHealth() const;
 		int GetSwordDamage() const;
 		int GetZombieDamage() const;
 		vector<Zombie*> zombies;

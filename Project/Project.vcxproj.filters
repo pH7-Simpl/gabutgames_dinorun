@@ -182,6 +182,9 @@
     <ClInclude Include="Item.h">
       <Filter>Project Akhir</Filter>
     </ClInclude>
+    <ClInclude Include="BrokenHeart.h">
+      <Filter>Project Akhir</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shader.cpp">
@@ -332,6 +335,9 @@
       <Filter>Project Akhir</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
+      <Filter>Project Akhir</Filter>
+    </ClCompile>
+    <ClCompile Include="BrokenHeart.cpp">
       <Filter>Project Akhir</Filter>
     </ClCompile>
   </ItemGroup>

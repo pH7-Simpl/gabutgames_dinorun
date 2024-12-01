@@ -2,6 +2,7 @@
 #define ZOMBIE_H
 
 #include "Sprite.h"
+#include "BrokenHeart.h"
 
 namespace Engine {
 	enum class ZombieState {
@@ -9,10 +10,11 @@ namespace Engine {
 		GROUND,
 		DIE
 	};
+	class BrokenHeart;
 	class Zombie
 	{
 	public:
-		Zombie(Sprite* sprite, Sprite* hand_sprite);
+		Zombie(Sprite* sprite, Sprite* hand_sprite, BrokenHeart* broken_heart);
 		~Zombie();
 		void Update(float deltaTime);
 		void Draw();
@@ -37,9 +39,11 @@ namespace Engine {
 		void SetHitCooldown(float cooldown) { hitCooldown = cooldown; }
 		float colorLerpDuration = 0.0f;
 		float GetSpeed() const;
+		void ShowBrokenHeart();
 	protected:
 		Sprite* sprite = NULL;
 		Sprite* hand_sprite = NULL;
+		BrokenHeart* broken_heart = NULL;
 		ZombieState state;
 		float groundDur = 0, groundTime = 0;
 		int zombie_health = 100;

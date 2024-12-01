@@ -261,7 +261,7 @@ void Engine::AShroudedTomb_VeiledTruth::SetPlayerHealth(float x) {
     playerHealth = x;
 }
 
-float Engine::AShroudedTomb_VeiledTruth::GetPlayerHealth() const {
+int Engine::AShroudedTomb_VeiledTruth::GetPlayerHealth() const {
     return playerHealth;
 }
 

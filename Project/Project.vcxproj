@@ -151,6 +151,7 @@
     <ClInclude Include="ASTVTGameScreen.h" />
     <ClInclude Include="ASTVTMainMenuScreen.h" />
     <ClInclude Include="ASTVTPauseScreen.h" />
+    <ClInclude Include="BrokenHeart.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="BaseCharacter.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="ASTVTGameScreen.cpp" />
     <ClCompile Include="ASTVTMainMenuScreen.cpp" />
     <ClCompile Include="ASTVTPauseScreen.cpp" />
+    <ClCompile Include="BrokenHeart.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="BaseCharacter.cpp" />
