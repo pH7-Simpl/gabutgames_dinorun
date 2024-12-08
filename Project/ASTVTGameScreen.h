@@ -30,6 +30,7 @@ namespace Engine {
 		void NarrationFadeOut(float lerp_speed);
 		void NarrationRegulator();
 		void ZombieRegulator();
+		void EndSceneRegulator();
 		void CharacterMovement();
 		float GetHitCooldown() const { return hitCooldown; }
 		void SetHitCooldown(float cooldown) { hitCooldown = cooldown; }
@@ -42,11 +43,10 @@ namespace Engine {
 		Texture* dotTexture = NULL;
 		Texture* sword_texture = NULL;
 		Sprite* sword_sprite = NULL;
-		Sprite* background_sprite = NULL;
 		AShroudedTomb_VeiledTruth* astvt;
 		Text* debugText = NULL;
-		float x = 0, y = 0, attack_cooldown = 0, lerp_duration = 0, naration_bg_f = 0, master_time = 0.0f;
-		int narration_phase = 0, current_page_index = 0;
+		float x = 0, y = 0, attack_cooldown = 0, lerp_duration = 0, master_time = 0.0f;
+		int current_page_index = 0;
 		bool attacking = false, fade_in = false;
 		vector<Sprite*> dotSprites;
 		void SwordMovement(int direction);
@@ -62,6 +62,7 @@ namespace Engine {
 		float spawnZombieDuration = 0, maxZombieSpawnTime = 500, numZombieInPool = 100;
 		Engine::Sprite* CreateZombieSprite();
 		void SpawnZombies();
+		void KillAllZombies();
 		float hitCooldown = 0;
 		float colorLerpDuration = 0;
 		bool hit = false;

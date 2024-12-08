@@ -1,17 +1,21 @@
 {
+    "end_scene": false,
+    "end_scene_phase": -1,
+    "items": 0,
     "player": {
         "health": 100,
         "name": "Adaline",
         "speed": 2.0,
-        "sword_damage": 25,
+        "sword_damage": 100,
         "x": 200.0,
         "y": 100.0,
         "zombie_count": 0
     },
+    "post_narration_delay": 0.0,
     "story_phase": 0,
     "zombie": {
         "damage": 10,
         "zombie_per_spawn": 2,
-        "zombie_to_defeat_per_wave": 10
+        "zombie_to_defeat_per_wave": 1
     }
 }

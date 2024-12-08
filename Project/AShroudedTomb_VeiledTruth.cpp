@@ -16,6 +16,11 @@ void Engine::AShroudedTomb_VeiledTruth::Init()
     mc_texture2 = new Texture("mc2.png");
     mc_sprite1 = new Sprite(mc_texture1, defaultSpriteShader, defaultQuad);
     mc_sprite2 = new Sprite(mc_texture2, defaultSpriteShader, defaultQuad);
+    Texture* bg1 = new Texture("bg_1.png");
+    Texture* bg2 = new Texture("bg_2.png");
+    game_bg = (new Sprite(bg1, defaultSpriteShader, defaultQuad))->SetSize((float) GetSettings()->screenWidth, (float) GetSettings()->screenHeight);
+    end_bg = (new Sprite(bg2, defaultSpriteShader, defaultQuad))->SetSize((float)GetSettings()->screenWidth, (float)GetSettings()->screenHeight);
+    current_bg = game_bg;
     for (int i = 0; i < 3; i++) {
         Texture* texture = new Texture("Item" + std::to_string(i + 1) + ".png");
         Item* item = new Item("puzzle_item" + std::to_string(i + 1), new Sprite(texture, defaultSpriteShader, defaultQuad), this);
@@ -30,8 +35,7 @@ void Engine::AShroudedTomb_VeiledTruth::Init()
     mc_sprite2->SetPosition(200, 0)->SetNumXFrames(8)->SetNumYFrames(12)->SetAnimationDuration(70)->SetScale(1.0f)->AddAnimation("attack_up", 0, 5)->AddAnimation("attack_left", 8, 13)->AddAnimation("attack_down", 16, 21)->AddAnimation("attack_right", 24, 29);
     SaveSettings();
     LoadSettings();
-    SaveGame();
-    LoadGame();
+    ResetGame();
 	Engine::ScreenManager::GetInstance(this)
         ->AddScreen("astvtmainmenuscreen", new ASTVTMainMenuScreen())
         ->AddScreen("astvtgamescreen", new ASTVTGameScreen(this))
@@ -73,6 +77,9 @@ void Engine::AShroudedTomb_VeiledTruth::SaveGame() {
         gameData["items"].push_back(items[i]->GetName());
     }
     gameData["story_phase"] = story_phase;
+    gameData["end_scene"] = end_scene;
+    gameData["end_scene_phase"] = end_scene_phase;
+    gameData["post_narration_delay"] = post_narration_delay;
 
     ofstream file("ASTVT_gameData.json");
     if (file.is_open()) {
@@ -106,6 +113,9 @@ void Engine::AShroudedTomb_VeiledTruth::LoadGame() {
         }
     }
     story_phase = gameData["story_phase"];
+    end_scene = gameData["end_scene"];
+    end_scene_phase = gameData["end_scene_phase"];
+    post_narration_delay = gameData["post_narration_delay"];
     mc_sprite1->SetPosition(gameData["player"]["x"], gameData["player"]["y"]);
     mc_sprite2->SetPosition(gameData["player"]["x"] - 64, gameData["player"]["y"] - 64);
     zombie_count = gameData["player"]["zombie_count"];
@@ -113,7 +123,6 @@ void Engine::AShroudedTomb_VeiledTruth::LoadGame() {
     zombieDamage = gameData["zombie"]["damage"];
     zombie_per_spawn = gameData["zombie"]["zombie_per_spawn"];
     zombie_to_defeat_per_wave = gameData["zombie"]["zombie_to_defeat_per_wave"];
-
     file.close();
 }
 
@@ -126,14 +135,17 @@ void Engine::AShroudedTomb_VeiledTruth::ResetGame() {
         {"x", 200.0},
         {"y", 100.0},
         {"zombie_count", 0},
-        {"sword_damage", 25},
+        {"sword_damage", 100},
     };
     gameData["items"] = {};
     gameData["story_phase"] = 0;
+    gameData["end_scene"] = false;
+    gameData["end_scene_phase"] = -1;
+    gameData["post_narration_delay"] = 0.0f;
     gameData["zombie"] = {
         {"damage", 10},
         {"zombie_per_spawn", 2},
-        {"zombie_to_defeat_per_wave", 10},
+        {"zombie_to_defeat_per_wave", 1},
     };
     gameData["items"] = NULL;
 
@@ -145,6 +157,10 @@ void Engine::AShroudedTomb_VeiledTruth::ResetGame() {
     player_dying_duration = 0;
     mc_sprite1 = new Sprite(mc_texture1, defaultSpriteShader, defaultQuad);
     mc_sprite2 = new Sprite(mc_texture2, defaultSpriteShader, defaultQuad);
+    current_bg = game_bg;
+    narration_bg_f = 0.0f;
+    narration_phase = 0;
+    slow_down = false;
     narrating = false;
     for (int i = 0; i < items_to_collect.size(); i++) {
         items_to_collect[i]->Init();

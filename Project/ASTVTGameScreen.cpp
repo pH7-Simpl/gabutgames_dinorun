@@ -11,7 +11,6 @@ void Engine::ASTVTGameScreen::Init()
 	Texture* bgTexture = new Texture("bg_1.png");
 	Texture* naration_texture = new Texture("naration_bg.jpg");
 	zombie_texture = new Texture("zombiee.png");
-	background_sprite = (new Sprite(bgTexture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetSize((float)game->GetSettings()->screenWidth, (float)game->GetSettings()->screenHeight);
 	narration_bg = (new Sprite(naration_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetSize((float)game->GetSettings()->screenWidth, (float)game->GetSettings()->screenHeight);
 	sword_sprite = new Sprite(sword_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad());
 	sword_sprite->SetPosition(200, 50)->SetScale(1.0f)->SetNumXFrames(1)->SetNumYFrames(1)->SetBoundingBoxSize(sword_sprite->GetScaleWidth(),sword_sprite->GetScaleHeight());
@@ -166,7 +165,12 @@ void Engine::ASTVTGameScreen::Update()
 		}
 	}
 	NarrationRegulator();
-	ZombieRegulator();
+	if (!astvt->end_scene) {
+		ZombieRegulator();
+	}
+	else {
+		EndSceneRegulator();
+	}
 	if (!astvt->narrating) {
 		for (int i = 0; i < astvt->items_to_collect.size(); i++) {
 			astvt->items_to_collect[i]->Update(game->GetGameTime());
@@ -182,7 +186,7 @@ void Engine::ASTVTGameScreen::Update()
 
 void Engine::ASTVTGameScreen::Draw()
 {
-	background_sprite->Draw();
+	astvt->current_bg->Draw();
 	for (Zombie* zombie : astvt->zombies) {
 		zombie->Draw();
 	}
@@ -295,6 +299,7 @@ void Engine::ASTVTGameScreen::PlayerHitMechanism() {
 			astvt->mc_sprite1->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 			astvt->mc_sprite2->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 			if (astvt->GetPlayerHealth() <= 0) {
+				attacking = false;
 				zombie->SetHandPosition(-300, -300);
 				astvt->mc_sprite1->PlayAnim("die", true);
 				astvt->SetPlayerDyingDuration(2000.0f);
@@ -355,15 +360,15 @@ int Engine::ASTVTGameScreen::Lerp(float a, float b, float f)
 }
 
 void Engine::ASTVTGameScreen::NarrationFadeIn(float lerp_speed) {
-	naration_bg_f += lerp_speed;
-	narration_bg->SetColor(1.0f, 1.0f, 1.0f, naration_bg_f);
+	astvt->narration_bg_f += lerp_speed;
+	narration_bg->SetColor(1.0f, 1.0f, 1.0f, astvt->narration_bg_f);
 	lerp_duration = 0;
 	lerp_duration += game->GetGameTime();
 }
 
 void Engine::ASTVTGameScreen::NarrationFadeOut(float lerp_speed) {
-	naration_bg_f -= lerp_speed;
-	narration_bg->SetColor(1.0f, 1.0f, 1.0f, naration_bg_f);
+	astvt->narration_bg_f -= lerp_speed;
+	narration_bg->SetColor(1.0f, 1.0f, 1.0f, astvt->narration_bg_f);
 	lerp_duration = 0;
 	lerp_duration += game->GetGameTime();
 }
@@ -448,15 +453,26 @@ void Engine::ASTVTGameScreen::ShowNaration() {
 	master_time += game->GetGameTime();
 
 	// Phase 1: Fade-in
-	if (narration_phase == 0) {
+	if (astvt->narration_phase == 0) {
 		NarrationFadeIn(0.1f); // Fade in
-		if (naration_bg_f >= 1.0f) { // If fade-in is complete
-			narration_phase = 1;    // Move to narration phase
+		if (astvt->narration_bg_f >= 1.0f) { // If fade-in is complete
+			astvt->narration_phase = 1;    // Move to narration phase
+			if (astvt->end_scene && astvt->end_scene_phase == -1) {
+				attacking = false;
+				astvt->current_bg = astvt->end_bg;
+				KillAllZombies();
+				float x_pos = game->GetSettings()->screenWidth / 2 - astvt->mc_sprite1->GetScaleWidth() / 2;
+				float y_pos = 50;
+				astvt->mc_sprite1->SetPosition(x_pos, y_pos);
+				astvt->mc_sprite2->SetPosition(x_pos - 64, y_pos - 64);
+				astvt->mc_sprite1->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+				astvt->end_scene_phase = 0;
+			}
 			master_time = 0;        // Reset master_time for the next phase
 		}
 	}
 	// Phase 2: Narration (Character by Character)
-	else if (narration_phase == 1) {
+	else if (astvt->narration_phase == 1) {
 		// Handle text display logic
 		time_since_last_character += game->GetGameTime();
 		if (time_since_last_character >= text_display_speed && current_character_index < (int)full_narration.length()) {
@@ -468,12 +484,12 @@ void Engine::ASTVTGameScreen::ShowNaration() {
 
 		// If narration is finished for the current page
 		if (current_character_index >= (int)full_narration.length()) {
-			narration_phase = 3; // Move to read-time phase
+			astvt->narration_phase = 3; // Move to read-time phase
 			master_time = 0;     // Reset master_time for the next phase
 		}
 	}
 	// Phase 3: Wait to give time for the reader to read
-	else if (narration_phase == 3) {
+	else if (astvt->narration_phase == 3) {
 		if (master_time >= read_time) { // If enough time has passed for reading
 			if (current_page_index < (int)narration_pages.size() - 1) {
 				// Move to the next page
@@ -481,80 +497,48 @@ void Engine::ASTVTGameScreen::ShowNaration() {
 				full_narration = narration_pages[current_page_index];
 				displayed_naration = "";
 				current_character_index = 0;
-				narration_phase = 1; // Back to narration phase
+				astvt->narration_phase = 1; // Back to narration phase
 			}
 			else {
 				// If no more pages, move to fade-out phase
-				narration_phase = 2;
+				astvt->narration_phase = 2;
 				master_time = 0;
 				narration_text->SetText("");
 			}
 		}
 	}
 	// Phase 4: Fade-out
-	else if (narration_phase == 2) {
-		NarrationFadeOut(0.1f); // Fade out
-		if (naration_bg_f <= 0.0f) { // If fade-out is complete
-			astvt->narrating = false;       // Stop narrating once all phases are complete
-			narration_phase = 0;     // Reset phase for next narration
+	else if (astvt->narration_phase == 2) {
+		if (!astvt->slow_down) {
+			NarrationFadeOut(0.1f); // Fade out
+		}
+		else {
+			NarrationFadeOut(0.002f); // Fade out
+		}
+		if (astvt->narration_bg_f <= 0.0f) { // If fade-out is complete
 			master_time = 0;         // Reset master_time
-			if (astvt->GetStoryPhase() == -1 || astvt->GetStoryPhase() == 7) {
+			if (astvt->GetStoryPhase() == -1) {
+				astvt->current_bg = astvt->game_bg;
+				astvt->post_narration_delay = 0.0f;
 				astvt->GameOver();
 			}
+			else if (astvt->GetStoryPhase() == 7) {
+				astvt->GameOver();
+			}
+			astvt->narration_phase = 4;
+			astvt->slow_down = false;
+		}
+	}
+	else if (astvt->narration_phase == 4) {
+		if (master_time >= astvt->post_narration_delay) {
+			// If the delay is over, reset and start the next narration
+			astvt->narration_phase = 0;
+			master_time = 0;
+			astvt->narrating = false;       // Stop narrating once all phases are complete
+			// Trigger your scene or other actions here
 		}
 	}
 }
-
-
-//void Engine::ASTVTGameScreen::NarrationRegulator() {
-//	/* story_phase codes:
-//	0: Intro
-//	1: Key puzzle 1
-//	2: Key puzzle 2
-//	3: Key puzzle 3
-//	4: End 1
-//	5: End 2
-//	6: End 3
-//	10: MC Died
-//
-//	*/
-//	if (astvt->GetStoryPhase() == 0 && !narrating) {
-//		Narrate("How many days have passed?\tWhere are my friends and family ?\tI miss you all...");
-//		astvt->SetStoryPhase(1);
-//	}
-//	if (astvt->GetStoryPhase() == 1 && !narrating && astvt->HaveItem("PuzzleItem1")) {
-//		Narrate("Item 1");
-//		astvt->SetStoryPhase(2);
-//	}
-//	if (astvt->GetStoryPhase() == 2 && !narrating && astvt->HaveItem("PuzzleItem2")) {
-//		Narrate("Item 2");
-//		astvt->SetStoryPhase(3);
-//	}
-//	if (astvt->GetStoryPhase() == 3 && !narrating && astvt->HaveItem("PuzzleItem3")) {
-//		Narrate("Item 3");
-//		astvt->SetStoryPhase(4);
-//	}
-//	if (astvt->GetStoryPhase() == 4 && !narrating) {
-//		Narrate("An altar...?");
-//		astvt->SetStoryPhase(5);
-//	}
-//	if (astvt->GetStoryPhase() == 5 && !narrating) {
-//		Narrate("A voice erupts from within...\tYou who have passed through the trials...\tShall be granted a reward.\tStep into the altar, what you seek you shall obtain.");
-//		astvt->SetStoryPhase(6);
-//	}
-//	if (astvt->GetStoryPhase() == 6 && !narrating) {
-//		Narrate("How many days have passed?\tWhere are my friends and family ?\tI miss you all...");
-//		astvt->SetStoryPhase(7);
-//	}
-//	if (astvt->GetStoryPhase() == 10 && !narrating) {
-//		Narrate("An altar...?");
-//		astvt->SetStoryPhase(5);
-//	}
-//
-//	if (narrating) {
-//		ShowNaration();
-//	}
-//}
 
 void Engine::ASTVTGameScreen::NarrationRegulator() {
 	struct StoryPhase {
@@ -568,11 +552,11 @@ void Engine::ASTVTGameScreen::NarrationRegulator() {
 	// Define the story phases
 	static const std::vector<StoryPhase> storyPhases = {
 		{0, [this]() { return !astvt->narrating; }, "How many days have passed?\tWhere are my friends and family?\tI miss you all...", 1, nullptr},
-		{1, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item1"); }, "item1.txt", 2, nullptr},
-		{2, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item2"); }, "item2.txt", 3, nullptr},
-		{3, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item3"); }, "item3.txt", 4, nullptr},
-		{4, [this]() { return !astvt->narrating; }, "An altar...?", 5, nullptr},
-		{5, [this]() { return !astvt->narrating; }, "A voice erupts from within...\tYou who have passed through the trials...\tShall be granted a reward.\tStep into the altar, what you seek you shall obtain.", 6, nullptr},
+		{1, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item1"); }, "item1.txta", 2, nullptr},
+		{2, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item2"); }, "item2.txta", 3, nullptr},
+		{3, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item3"); }, "item3.txta", 4, [this]() {astvt->end_scene = true; astvt->slow_down = true; }},
+		{4, [this]() { return !astvt->narrating; }, "An altar...?", 5, [this]() {astvt->post_narration_delay = 5000.0f; }},
+		{5, [this]() { return !astvt->narrating; }, "A voice erupts from within...\tYou who have passed through the trials...\tShall be granted a reward.\tStep into the altar, what you seek you shall obtain.", 6, [this]() {astvt->end_scene_phase = 1; }},
 		{6, [this]() { return !astvt->narrating; }, "How many days have passed?\tWhere are my friends and family?\tI miss you all...", 7, nullptr},
 		{10, [this]() { return !astvt->narrating; }, " It’s not over yet...", -1,nullptr}
 	};
@@ -592,6 +576,40 @@ void Engine::ASTVTGameScreen::NarrationRegulator() {
 	// Handle narration display
 	if (astvt->narrating) {
 		ShowNaration();
+	}
+}
+
+void Engine::ASTVTGameScreen::EndSceneRegulator() {
+	if (astvt->end_scene_phase == 0 && astvt->narration_bg_f <= 0.0f) {
+		if (astvt->mc_sprite1->GetPosition().y <= astvt->GetSettings()->screenHeight * 0.25f) {
+			vec2 oldPlayerPos = astvt->mc_sprite1->GetPosition();
+			x = oldPlayerPos.x, y = oldPlayerPos.y;
+			y += astvt->GetPlayerSpeed();
+			astvt->mc_sprite1->PlayAnim("walk_up");
+			mc_walk->Play(false);
+			astvt->mc_sprite1->SetPosition(x, y);
+			astvt->mc_sprite2->SetPosition(x - 64, y - 64);
+		}
+		else {
+			astvt->mc_sprite1->PlayAnim("idle");
+		}
+	}
+	else if (astvt->end_scene_phase == 1 && astvt->narration_bg_f <= 0.0f) {
+		if (astvt->mc_sprite1->GetPosition().y <= astvt->GetSettings()->screenHeight * 0.5f) {
+			vec2 oldPlayerPos = astvt->mc_sprite1->GetPosition();
+			x = oldPlayerPos.x, y = oldPlayerPos.y;
+			y += astvt->GetPlayerSpeed();
+			astvt->mc_sprite1->PlayAnim("walk_up");
+			mc_walk->Play(false);
+			astvt->mc_sprite1->SetPosition(x, y);
+			astvt->mc_sprite2->SetPosition(x - 64, y - 64);
+		}
+		else {
+			astvt->mc_sprite1->PlayAnim("die", true);
+		}
+	}
+	else if (astvt->end_scene_phase == 2 && astvt->narration_bg_f <= 0.0f) {
+		
 	}
 }
 
@@ -728,6 +746,16 @@ void Engine::ASTVTGameScreen::SpawnZombies()
 			// Set the zombie's position
 			zombie->SetPosition(x, y);
 			spawnCount++;
+		}
+	}
+}
+
+void Engine::ASTVTGameScreen::KillAllZombies()
+{
+	for (Zombie* zombie : astvt->zombies) {
+		zombie->SetHealth(100);
+		if (!zombie->IsDie()) {
+			zombie->SetZombieState(ZombieState::DIE);
 		}
 	}
 }

@@ -13,7 +13,7 @@ Engine::Item::~Item()
 
 void Engine::Item::Init()
 {
-	sprite->SetScale(0.7f)->SetBoundingBoxSize(sprite->GetScaleWidth() - (9 * sprite->GetScale()), sprite->GetScaleHeight() - (10 * sprite->GetScale()))->SetPosition(-300, -300);
+	sprite->SetScale(0.5f)->SetBoundingBoxSize(sprite->GetScaleWidth() - (9 * sprite->GetScale()), sprite->GetScaleHeight() - (10 * sprite->GetScale()))->SetPosition(-300, -300);
 	Texture* text_box_texture = new Texture("chatbox.png");
 	text_box_sprite = (new Sprite(text_box_texture, astvt->GetDefaultSpriteShader(), astvt->GetDefaultQuad()))->SetScale(0.07f);
 	text_inside_box = (new Text("lucon.ttf", 10, astvt->GetDefaultTextShader()))->SetScale(1.0f)->SetColor(0, 0, 0)->SetText("Press (F)\nto collect");
@@ -62,7 +62,7 @@ Engine::Item* Engine::Item::SetPosition(float x, float y)
 {
 	sprite->SetPosition(x, y);
 	text_box_sprite->SetPosition(x + sprite->GetScaleWidth() / 4, y + sprite->GetScaleHeight() / 2);
-	text_inside_box->SetPosition(x + sprite->GetScaleWidth() / 1.8f, y + sprite->GetScaleHeight() * 2.2f);
+	text_inside_box->SetPosition(x + sprite->GetScaleWidth() / 1.8f, y + sprite->GetScaleHeight() * 1.7f);
 	return this;
 }
 

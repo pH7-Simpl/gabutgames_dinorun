@@ -45,13 +45,19 @@ namespace Engine {
 		vector<Zombie*> zombies;
 		vector<Item*> items;
 		vector<Item*> items_to_collect;
-		bool narrating = false;
+		bool narrating = false, end_scene = false;
 		float GetPlayerDyingDuration() const { return player_dying_duration; }
 		void SetPlayerDyingDuration(float cooldown) { player_dying_duration = cooldown; }
 		int GetZombiePerSpawn() const { return zombie_per_spawn; }
 		int GetZombieToDefeatPerWave() const { return zombie_to_defeat_per_wave; }
+		int end_scene_phase = -1, narration_phase = 0, slow_down = false;
+		float post_narration_delay = 0.0f;
+		float narration_bg_f = 0.0f;
 		Sprite* mc_sprite1 = NULL;
 		Sprite* mc_sprite2 = NULL;
+		Sprite* game_bg = NULL;
+		Sprite* end_bg = NULL;
+		Sprite* current_bg = NULL;
 		Texture* mc_texture1 = NULL;
 		Texture* mc_texture2 = NULL;
 	private:
