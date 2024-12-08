@@ -14,12 +14,17 @@ void Engine::AShroudedTomb_VeiledTruth::Init()
 {
     mc_texture1 = new Texture("mc1.png");
     mc_texture2 = new Texture("mc2.png");
+    Texture* mc_zombie_texture = new Texture("mc_zombie_reverse.png");
     mc_sprite1 = new Sprite(mc_texture1, defaultSpriteShader, defaultQuad);
     mc_sprite2 = new Sprite(mc_texture2, defaultSpriteShader, defaultQuad);
+    mc_zombie_sprite = (new Sprite(mc_zombie_texture, defaultSpriteShader, defaultQuad));
+    mc_zombie_sprite->SetNumXFrames(6)->SetNumYFrames(1)->SetAnimationDuration(70)->AddAnimation("wakey_wakey", 0, 5);
     Texture* bg1 = new Texture("bg_1.png");
     Texture* bg2 = new Texture("bg_2.png");
+    Texture* bg3 = new Texture("narration_bg.jpg");
     game_bg = (new Sprite(bg1, defaultSpriteShader, defaultQuad))->SetSize((float) GetSettings()->screenWidth, (float) GetSettings()->screenHeight);
     end_bg = (new Sprite(bg2, defaultSpriteShader, defaultQuad))->SetSize((float)GetSettings()->screenWidth, (float)GetSettings()->screenHeight);
+    narration_bg = (new Sprite(bg3, defaultSpriteShader, defaultQuad))->SetSize((float)GetSettings()->screenWidth, (float)GetSettings()->screenHeight);
     current_bg = game_bg;
     for (int i = 0; i < 3; i++) {
         Texture* texture = new Texture("Item" + std::to_string(i + 1) + ".png");
@@ -66,7 +71,9 @@ void Engine::AShroudedTomb_VeiledTruth::SaveGame() {
         {"x", playerPos.x},
         {"y", playerPos.y},
         {"zombie_count", zombie_count},
-        {"sword_damage", swordDamage}
+        {"sword_damage", swordDamage},
+        {"zombified", zombified},
+        {"player_dying_duration", player_dying_duration}
     };
     gameData["zombie"] = {
         {"damage", zombieDamage},
@@ -100,6 +107,8 @@ void Engine::AShroudedTomb_VeiledTruth::LoadGame() {
     playerName = gameData["player"]["name"];
     playerHealth = gameData["player"]["health"];
     playerSpeed = gameData["player"]["speed"];
+    player_dying_duration = gameData["player"]["player_dying_duration"];
+    zombified = gameData["player"]["zombified"];
     items.clear();
     if (gameData.contains("items") && gameData["items"].is_array()) {
         for (int i = 0; i < gameData["items"].size(); i++) {
@@ -135,7 +144,9 @@ void Engine::AShroudedTomb_VeiledTruth::ResetGame() {
         {"x", 200.0},
         {"y", 100.0},
         {"zombie_count", 0},
-        {"sword_damage", 100},
+        {"sword_damage", 25},
+        {"zombified", false},
+        {"player_dying_duration", 0}
     };
     gameData["items"] = {};
     gameData["story_phase"] = 0;
@@ -145,7 +156,7 @@ void Engine::AShroudedTomb_VeiledTruth::ResetGame() {
     gameData["zombie"] = {
         {"damage", 10},
         {"zombie_per_spawn", 2},
-        {"zombie_to_defeat_per_wave", 1},
+        {"zombie_to_defeat_per_wave", 10},
     };
     gameData["items"] = NULL;
 
@@ -154,12 +165,13 @@ void Engine::AShroudedTomb_VeiledTruth::ResetGame() {
         file << gameData.dump(4); // Indented with 4 spaces for readability
         file.close();
     }
-    player_dying_duration = 0;
     mc_sprite1 = new Sprite(mc_texture1, defaultSpriteShader, defaultQuad);
     mc_sprite2 = new Sprite(mc_texture2, defaultSpriteShader, defaultQuad);
     current_bg = game_bg;
     narration_bg_f = 0.0f;
+    narration_bg->SetColor(1.0f, 1.0f, 1.0f, 0.0f);
     narration_phase = 0;
+    zombified_time = 3000.0f;
     slow_down = false;
     narrating = false;
     for (int i = 0; i < items_to_collect.size(); i++) {

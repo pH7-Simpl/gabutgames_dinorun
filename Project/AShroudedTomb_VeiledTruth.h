@@ -53,10 +53,14 @@ namespace Engine {
 		int end_scene_phase = -1, narration_phase = 0, slow_down = false;
 		float post_narration_delay = 0.0f;
 		float narration_bg_f = 0.0f;
+		bool zombified = false;
+		float zombified_time = 3000.0f;
 		Sprite* mc_sprite1 = NULL;
 		Sprite* mc_sprite2 = NULL;
+		Sprite* mc_zombie_sprite = NULL;
 		Sprite* game_bg = NULL;
 		Sprite* end_bg = NULL;
+		Sprite* narration_bg = NULL;
 		Sprite* current_bg = NULL;
 		Texture* mc_texture1 = NULL;
 		Texture* mc_texture2 = NULL;

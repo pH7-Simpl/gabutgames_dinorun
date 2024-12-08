@@ -33,6 +33,9 @@
     <None Include="text.vert">
       <Filter>Shader Files</Filter>
     </None>
+    <None Include="ASTVT_gameData.json" />
+    <None Include="ASTVT_gameSettings.json" />
+    <None Include="2021-08-16_-_8_Bit_Adventure_-_www.FesliyanStudios.com.ogg" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -363,5 +366,165 @@
     <Media Include="death.wav">
       <Filter>Shader Files</Filter>
     </Media>
+    <Media Include="jump.wav">
+      <Filter>Shader Files</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bg_1.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg_2.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="broken_heart.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="chatbox.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Continue.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Cover.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="dot.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Exit.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="heart.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Item1.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Item2.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Item3.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Main_Menu.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="mc.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="mc_combat.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="mc1.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="mc2.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="mcc.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="naration_bg.jpg">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="pause_bg.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Retry.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="skeleton.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="zombiee.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Start_Game.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="narration_bg.jpg">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg00.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg01.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg02.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg03.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg04.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg05.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg06.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg07.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg08.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bg09.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="bullet.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="buttons.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="buttons2.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="buttons2-1.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="buttons2-2.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="idle.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="mc_zombie_reverse.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="monster.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="platform.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="revive_as_zombie.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="s8dchars.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="sword.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="turtles.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+    <Image Include="Zombie.png">
+      <Filter>Shader Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="item1.txt" />
+    <Text Include="item2.txt" />
+    <Text Include="item3.txt" />
   </ItemGroup>
 </Project>

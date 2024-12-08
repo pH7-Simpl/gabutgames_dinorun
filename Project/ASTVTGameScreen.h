@@ -50,10 +50,9 @@ namespace Engine {
 		bool attacking = false, fade_in = false;
 		vector<Sprite*> dotSprites;
 		void SwordMovement(int direction);
-		Sprite* narration_bg = NULL;
 		string full_narration;
 		string displayed_naration;
-		float text_display_speed = 50.0f, read_time = 0000.0f;
+		float text_display_speed = 50.0f, read_time = 3000.0f;
 		float time_since_last_character = 0.0f;
 		int current_character_index = 0;
 		Text* narration_text = NULL;

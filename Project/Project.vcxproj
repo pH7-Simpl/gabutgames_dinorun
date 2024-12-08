@@ -140,6 +140,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="2021-08-16_-_8_Bit_Adventure_-_www.FesliyanStudios.com.ogg" />
+    <None Include="ASTVT_gameData.json" />
+    <None Include="ASTVT_gameSettings.json" />
     <None Include="sprite.frag" />
     <None Include="sprite.vert" />
     <None Include="text.frag" />
@@ -253,11 +256,69 @@
   <ItemGroup>
     <Media Include="death.wav" />
     <Media Include="item_drop.wav" />
+    <Media Include="jump.wav" />
     <Media Include="mc_damage.wav" />
     <Media Include="mc_death.wav" />
     <Media Include="mc_walk.wav" />
     <Media Include="sword_swing_hit.wav" />
     <Media Include="sword_swing_miss.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="bg.png" />
+    <Image Include="bg00.png" />
+    <Image Include="bg01.png" />
+    <Image Include="bg02.png" />
+    <Image Include="bg03.png" />
+    <Image Include="bg04.png" />
+    <Image Include="bg05.png" />
+    <Image Include="bg06.png" />
+    <Image Include="bg07.png" />
+    <Image Include="bg08.png" />
+    <Image Include="bg09.png" />
+    <Image Include="bg_1.png" />
+    <Image Include="bg_2.png" />
+    <Image Include="broken_heart.png" />
+    <Image Include="bullet.png" />
+    <Image Include="buttons.png" />
+    <Image Include="buttons2-1.png" />
+    <Image Include="buttons2-2.png" />
+    <Image Include="buttons2.png" />
+    <Image Include="chatbox.png" />
+    <Image Include="Continue.png" />
+    <Image Include="Cover.png" />
+    <Image Include="dot.png" />
+    <Image Include="Exit.png" />
+    <Image Include="heart.png" />
+    <Image Include="idle.png" />
+    <Image Include="Item1.png" />
+    <Image Include="Item2.png" />
+    <Image Include="Item3.png" />
+    <Image Include="Main_Menu.png" />
+    <Image Include="mc.png" />
+    <Image Include="mc1.png" />
+    <Image Include="mc2.png" />
+    <Image Include="mcc.png" />
+    <Image Include="mc_combat.png" />
+    <Image Include="mc_zombie_reverse.png" />
+    <Image Include="monster.png" />
+    <Image Include="naration_bg.jpg" />
+    <Image Include="narration_bg.jpg" />
+    <Image Include="pause_bg.png" />
+    <Image Include="platform.png" />
+    <Image Include="Retry.png" />
+    <Image Include="revive_as_zombie.png" />
+    <Image Include="s8dchars.png" />
+    <Image Include="skeleton.png" />
+    <Image Include="Start_Game.png" />
+    <Image Include="sword.png" />
+    <Image Include="turtles.png" />
+    <Image Include="Zombie.png" />
+    <Image Include="zombiee.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="item1.txt" />
+    <Text Include="item2.txt" />
+    <Text Include="item3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

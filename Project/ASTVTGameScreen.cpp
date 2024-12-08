@@ -9,9 +9,7 @@ void Engine::ASTVTGameScreen::Init()
 {
 	sword_texture = new Texture("sword.png");
 	Texture* bgTexture = new Texture("bg_1.png");
-	Texture* naration_texture = new Texture("naration_bg.jpg");
 	zombie_texture = new Texture("zombiee.png");
-	narration_bg = (new Sprite(naration_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetSize((float)game->GetSettings()->screenWidth, (float)game->GetSettings()->screenHeight);
 	sword_sprite = new Sprite(sword_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad());
 	sword_sprite->SetPosition(200, 50)->SetScale(1.0f)->SetNumXFrames(1)->SetNumYFrames(1)->SetBoundingBoxSize(sword_sprite->GetScaleWidth(),sword_sprite->GetScaleHeight());
 	item_drop = (new Sound("item_drop.wav"))->SetVolume(100);
@@ -190,11 +188,15 @@ void Engine::ASTVTGameScreen::Draw()
 	for (Zombie* zombie : astvt->zombies) {
 		zombie->Draw();
 	}
-	if (!attacking && !game->GetInputManager()->IsKeyPressed("attack")) {
-		astvt->mc_sprite1->Draw();
-	}
-	else {
-		astvt->mc_sprite2->Draw();
+	if (astvt->zombified_time > 0) {
+		if (!attacking && !game->GetInputManager()->IsKeyPressed("attack")) {
+			astvt->mc_sprite1->Draw();
+		}
+		else {
+			astvt->mc_sprite2->Draw();
+		}
+	} else  {
+		astvt->mc_zombie_sprite->Draw();
 	}
 	for (int i = 0; i < astvt->items_to_collect.size(); i++) {
 		astvt->items_to_collect[i]->Draw();
@@ -215,7 +217,7 @@ void Engine::ASTVTGameScreen::Draw()
 		}
 	}
 	if (astvt->narrating) {
-		narration_bg->Draw();
+		astvt->narration_bg->Draw();
 		narration_text->Draw();
 	}
 }
@@ -284,6 +286,7 @@ void Engine::ASTVTGameScreen::CharacterMovement() {
 			}
 		}
 	astvt->mc_sprite1->SetPosition(x, y);
+	astvt->mc_zombie_sprite->SetPosition(x, y);
 	astvt->mc_sprite2->SetPosition(x - 64, y - 64);
 	PlayerHitMechanism();
 }
@@ -361,14 +364,14 @@ int Engine::ASTVTGameScreen::Lerp(float a, float b, float f)
 
 void Engine::ASTVTGameScreen::NarrationFadeIn(float lerp_speed) {
 	astvt->narration_bg_f += lerp_speed;
-	narration_bg->SetColor(1.0f, 1.0f, 1.0f, astvt->narration_bg_f);
+	astvt->narration_bg->SetColor(1.0f, 1.0f, 1.0f, astvt->narration_bg_f);
 	lerp_duration = 0;
 	lerp_duration += game->GetGameTime();
 }
 
 void Engine::ASTVTGameScreen::NarrationFadeOut(float lerp_speed) {
 	astvt->narration_bg_f -= lerp_speed;
-	narration_bg->SetColor(1.0f, 1.0f, 1.0f, astvt->narration_bg_f);
+	astvt->narration_bg->SetColor(1.0f, 1.0f, 1.0f, astvt->narration_bg_f);
 	lerp_duration = 0;
 	lerp_duration += game->GetGameTime();
 }
@@ -465,6 +468,7 @@ void Engine::ASTVTGameScreen::ShowNaration() {
 				float y_pos = 50;
 				astvt->mc_sprite1->SetPosition(x_pos, y_pos);
 				astvt->mc_sprite2->SetPosition(x_pos - 64, y_pos - 64);
+				astvt->mc_zombie_sprite->SetPosition(x_pos, y_pos);
 				astvt->mc_sprite1->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 				astvt->end_scene_phase = 0;
 			}
@@ -552,11 +556,11 @@ void Engine::ASTVTGameScreen::NarrationRegulator() {
 	// Define the story phases
 	static const std::vector<StoryPhase> storyPhases = {
 		{0, [this]() { return !astvt->narrating; }, "How many days have passed?\tWhere are my friends and family?\tI miss you all...", 1, nullptr},
-		{1, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item1"); }, "item1.txta", 2, nullptr},
-		{2, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item2"); }, "item2.txta", 3, nullptr},
-		{3, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item3"); }, "item3.txta", 4, [this]() {astvt->end_scene = true; astvt->slow_down = true; }},
-		{4, [this]() { return !astvt->narrating; }, "An altar...?", 5, [this]() {astvt->post_narration_delay = 5000.0f; }},
-		{5, [this]() { return !astvt->narrating; }, "A voice erupts from within...\tYou who have passed through the trials...\tShall be granted a reward.\tStep into the altar, what you seek you shall obtain.", 6, [this]() {astvt->end_scene_phase = 1; }},
+		{1, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item1"); }, "item1.txt", 2, nullptr},
+		{2, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item2"); }, "item2.txt", 3, nullptr},
+		{3, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item3"); }, "item3.txt", 4, [this]() {astvt->end_scene = true; astvt->slow_down = true; astvt->mc_sprite1->PlayAnim("idle"); }},
+		{4, [this]() { return !astvt->narrating; }, "An altar...?", 5, [this]() {astvt->post_narration_delay = 2000.0f; }},
+		{5, [this]() { return !astvt->narrating; }, "A voice erupts from within...\tYou who have passed through the trials...\tShall be granted a reward.\tStep into the altar, what you seek you shall obtain.", 6, [this]() {astvt->end_scene_phase = 1; astvt->post_narration_delay = 8000.0f; }},
 		{6, [this]() { return !astvt->narrating; }, "How many days have passed?\tWhere are my friends and family?\tI miss you all...", 7, nullptr},
 		{10, [this]() { return !astvt->narrating; }, " It’s not over yet...", -1,nullptr}
 	};
@@ -580,6 +584,16 @@ void Engine::ASTVTGameScreen::NarrationRegulator() {
 }
 
 void Engine::ASTVTGameScreen::EndSceneRegulator() {
+	if (astvt->zombified) {
+		if (astvt->zombified_time > 0) {
+			astvt->zombified_time -= game->GetGameTime();
+			death->Play(false);
+		}
+		else {
+			astvt->mc_zombie_sprite->Update(game->GetGameTime());
+			astvt->mc_zombie_sprite->PlayAnim("wakey_wakey", true);
+		}
+	}
 	if (astvt->end_scene_phase == 0 && astvt->narration_bg_f <= 0.0f) {
 		if (astvt->mc_sprite1->GetPosition().y <= astvt->GetSettings()->screenHeight * 0.25f) {
 			vec2 oldPlayerPos = astvt->mc_sprite1->GetPosition();
@@ -588,6 +602,7 @@ void Engine::ASTVTGameScreen::EndSceneRegulator() {
 			astvt->mc_sprite1->PlayAnim("walk_up");
 			mc_walk->Play(false);
 			astvt->mc_sprite1->SetPosition(x, y);
+			astvt->mc_zombie_sprite->SetPosition(x, y);
 			astvt->mc_sprite2->SetPosition(x - 64, y - 64);
 		}
 		else {
@@ -602,14 +617,13 @@ void Engine::ASTVTGameScreen::EndSceneRegulator() {
 			astvt->mc_sprite1->PlayAnim("walk_up");
 			mc_walk->Play(false);
 			astvt->mc_sprite1->SetPosition(x, y);
+			astvt->mc_zombie_sprite->SetPosition(x, y);
 			astvt->mc_sprite2->SetPosition(x - 64, y - 64);
 		}
 		else {
 			astvt->mc_sprite1->PlayAnim("die", true);
+			astvt->zombified = true;
 		}
-	}
-	else if (astvt->end_scene_phase == 2 && astvt->narration_bg_f <= 0.0f) {
-		
 	}
 }
 
