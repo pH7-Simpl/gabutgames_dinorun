@@ -7,24 +7,23 @@ Engine::ASTVTGameScreen::ASTVTGameScreen(AShroudedTomb_VeiledTruth* instance) : 
 
 void Engine::ASTVTGameScreen::Init()
 {
-	sword_texture = new Texture("sword.png");
-	Texture* bgTexture = new Texture("bg_1.png");
-	zombie_texture = new Texture("zombiee.png");
+	sword_texture = new Texture("assets/Item1.png");
+	zombie_texture = new Texture("assets/zombie.png");
 	sword_sprite = new Sprite(sword_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad());
 	sword_sprite->SetPosition(200, 50)->SetScale(1.0f)->SetNumXFrames(1)->SetNumYFrames(1)->SetBoundingBoxSize(sword_sprite->GetScaleWidth(),sword_sprite->GetScaleHeight());
-	item_drop = (new Sound("item_drop.wav"))->SetVolume(100);
-	mc_damage = (new Sound("mc_damage.wav"))->SetVolume(100);
-	death = (new Sound("death.wav"))->SetVolume(100);
-	mc_walk = (new Sound("mc_walk.wav"))->SetVolume(100);
-	sword_swing_hit = (new Sound("sword_swing_hit.wav"))->SetVolume(100);
-	sword_swing_miss = (new Sound("sword_swing_miss.wav"))->SetVolume(100);
-	narration_text = new Text("lucon.ttf", 12, game->GetDefaultTextShader());
-	debugText = new Text("lucon.ttf", 24, game->GetDefaultTextShader());
+	item_drop = (new Sound("assets/item_drop.wav"))->SetVolume(100);
+	mc_damage = (new Sound("assets/mc_damage.wav"))->SetVolume(100);
+	death = (new Sound("assets/death.wav"))->SetVolume(100);
+	mc_walk = (new Sound("assets/mc_walk.wav"))->SetVolume(100);
+	sword_swing_hit = (new Sound("assets/sword_swing_hit.wav"))->SetVolume(100);
+	sword_swing_miss = (new Sound("assets/sword_swing_miss.wav"))->SetVolume(100);
+	narration_text = new Text("assets/lucon.ttf", 12, game->GetDefaultTextShader());
+	debugText = new Text("assets/lucon.ttf", 24, game->GetDefaultTextShader());
 	narration_text->SetScale(2.2f)->SetColor(64, 64, 64)->SetPosition(150, game->GetSettings()->screenHeight - 150);
 	debugText->SetScale(2.2f)->SetColor(64, 64, 64)->SetPosition((game->GetSettings()->screenWidth) / 2, game->GetSettings()->screenHeight - (debugText->GetFontSize() * debugText->GetScale()) - 100);
-	Texture* broken_heart_texture = new Texture("broken_heart.png");
-	Texture* heart_texture = new Texture("heart.png");
-	Texture* skull_texture = new Texture("skeleton.png");
+	Texture* broken_heart_texture = new Texture("assets/broken_heart.png");
+	Texture* heart_texture = new Texture("assets/heart.png");
+	Texture* skull_texture = new Texture("assets/skeleton.png");
 	heart_sprite = (new Sprite(heart_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetScale(0.1f);
 	skull_sprite = (new Sprite(skull_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetScale(0.07f);
 	float topUIX = 20;
@@ -32,11 +31,11 @@ void Engine::ASTVTGameScreen::Init()
 	float topTextUIY = game->GetSettings()->screenHeight - heart_sprite->GetScaleHeight() / 1.5;
 	heart_sprite->SetPosition(topUIX, topImageUIY);
 	topUIX += heart_sprite->GetScaleWidth() - 10;
-	player_hp_text = (new Text("lucon.ttf", 24, game->GetDefaultTextShader()))->SetPosition(topUIX, topTextUIY);
+	player_hp_text = (new Text("assets/lucon.ttf", 24, game->GetDefaultTextShader()))->SetPosition(topUIX, topTextUIY);
 	topUIX += 60;
 	skull_sprite->SetPosition(topUIX, topImageUIY + 10);
 	topUIX += skull_sprite->GetScaleWidth();
-	zombie_count = (new Text("lucon.ttf", 24, game->GetDefaultTextShader()))->SetPosition(topUIX, topTextUIY);
+	zombie_count = (new Text("assets/lucon.ttf", 24, game->GetDefaultTextShader()))->SetPosition(topUIX, topTextUIY);
 	Sprite* zombie_broken_heart_sprite = (new Sprite(broken_heart_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetScale(0.06f);
 	player_broken_heart = new BrokenHeart(zombie_broken_heart_sprite);
 
@@ -54,7 +53,7 @@ void Engine::ASTVTGameScreen::Init()
 		astvt->zombies.push_back(zombie);
 	}
 
-	dotTexture = new Texture("dot.png");
+	dotTexture = new Texture("assets/dot.png");
 	for (int i = 0; i < 8; i++) {
 		Sprite* dotsprite = new Sprite(dotTexture, game->GetDefaultSpriteShader(), game->GetDefaultQuad());
 		dotSprites.push_back(dotsprite);
@@ -556,9 +555,9 @@ void Engine::ASTVTGameScreen::NarrationRegulator() {
 	// Define the story phases
 	static const std::vector<StoryPhase> storyPhases = {
 		{0, [this]() { return !astvt->narrating; }, "How many days have passed?\tWhere are my friends and family?\tI miss you all...", 1, nullptr},
-		{1, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item1"); }, "item1.txt", 2, nullptr},
-		{2, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item2"); }, "item2.txt", 3, nullptr},
-		{3, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item3"); }, "item3.txt", 4, [this]() {astvt->end_scene = true; astvt->slow_down = true; astvt->mc_sprite1->PlayAnim("idle"); }},
+		{1, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item1"); }, "assets/item1.txt", 2, nullptr},
+		{2, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item2"); }, "assets/item2.txt", 3, nullptr},
+		{3, [this]() { return !astvt->narrating && astvt->HaveItem("puzzle_item3"); }, "assets/item3.txt", 4, [this]() {astvt->end_scene = true; astvt->slow_down = true; astvt->mc_sprite1->PlayAnim("idle"); }},
 		{4, [this]() { return !astvt->narrating; }, "An altar...?", 5, [this]() {astvt->post_narration_delay = 2000.0f; }},
 		{5, [this]() { return !astvt->narrating; }, "A voice erupts from within...\tYou who have passed through the trials...\tShall be granted a reward.\tStep into the altar, what you seek you shall obtain.", 6, [this]() {astvt->end_scene_phase = 1; astvt->post_narration_delay = 8000.0f; }},
 		{6, [this]() { return !astvt->narrating; }, "How many days have passed?\tWhere are my friends and family?\tI miss you all...", 7, nullptr},

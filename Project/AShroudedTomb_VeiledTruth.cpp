@@ -12,22 +12,22 @@ Engine::AShroudedTomb_VeiledTruth::~AShroudedTomb_VeiledTruth()
 
 void Engine::AShroudedTomb_VeiledTruth::Init()
 {
-    mc_texture1 = new Texture("mc1.png");
-    mc_texture2 = new Texture("mc2.png");
-    Texture* mc_zombie_texture = new Texture("mc_zombie_reverse.png");
+    mc_texture1 = new Texture("assets/mc1.png");
+    mc_texture2 = new Texture("assets/mc2.png");
+    Texture* mc_zombie_texture = new Texture("assets/mc_zombie_reverse.png");
     mc_sprite1 = new Sprite(mc_texture1, defaultSpriteShader, defaultQuad);
     mc_sprite2 = new Sprite(mc_texture2, defaultSpriteShader, defaultQuad);
     mc_zombie_sprite = (new Sprite(mc_zombie_texture, defaultSpriteShader, defaultQuad));
     mc_zombie_sprite->SetNumXFrames(6)->SetNumYFrames(1)->SetAnimationDuration(70)->AddAnimation("wakey_wakey", 0, 5);
-    Texture* bg1 = new Texture("bg_1.png");
-    Texture* bg2 = new Texture("bg_2.png");
-    Texture* bg3 = new Texture("narration_bg.jpg");
+    Texture* bg1 = new Texture("assets/bg_1.png");
+    Texture* bg2 = new Texture("assets/bg_2.png");
+    Texture* bg3 = new Texture("assets/narration_bg.jpg");
     game_bg = (new Sprite(bg1, defaultSpriteShader, defaultQuad))->SetSize((float) GetSettings()->screenWidth, (float) GetSettings()->screenHeight);
     end_bg = (new Sprite(bg2, defaultSpriteShader, defaultQuad))->SetSize((float)GetSettings()->screenWidth, (float)GetSettings()->screenHeight);
     narration_bg = (new Sprite(bg3, defaultSpriteShader, defaultQuad))->SetSize((float)GetSettings()->screenWidth, (float)GetSettings()->screenHeight);
     current_bg = game_bg;
     for (int i = 0; i < 3; i++) {
-        Texture* texture = new Texture("Item" + std::to_string(i + 1) + ".png");
+        Texture* texture = new Texture("assets/Item" + std::to_string(i + 1) + ".png");
         Item* item = new Item("puzzle_item" + std::to_string(i + 1), new Sprite(texture, defaultSpriteShader, defaultQuad), this);
         items_to_collect.push_back(item);
     }
@@ -88,7 +88,7 @@ void Engine::AShroudedTomb_VeiledTruth::SaveGame() {
     gameData["end_scene_phase"] = end_scene_phase;
     gameData["post_narration_delay"] = post_narration_delay;
 
-    ofstream file("ASTVT_gameData.json");
+    ofstream file("assets/ASTVT_gameData.json");
     if (file.is_open()) {
         file << gameData.dump(4); // Indented with 4 spaces for readability
         file.close();
@@ -96,7 +96,7 @@ void Engine::AShroudedTomb_VeiledTruth::SaveGame() {
 }
 
 void Engine::AShroudedTomb_VeiledTruth::LoadGame() {
-    ifstream file("ASTVT_gameData.json");
+    ifstream file("assets/ASTVT_gameData.json");
     if (!file.is_open()) {
         cerr << "Failed to open save file!" << endl;
         return;
@@ -160,7 +160,7 @@ void Engine::AShroudedTomb_VeiledTruth::ResetGame() {
     };
     gameData["items"] = NULL;
 
-    ofstream file("ASTVT_gameData.json");
+    ofstream file("assets/ASTVT_gameData.json");
     if (file.is_open()) {
         file << gameData.dump(4); // Indented with 4 spaces for readability
         file.close();
@@ -207,7 +207,7 @@ void Engine::AShroudedTomb_VeiledTruth::SaveSettings() {
         {"press", SDLK_RETURN},
     };
 
-    ofstream file("ASTVT_gameSettings.json");
+    ofstream file("assets/ASTVT_gameSettings.json");
     if (file.is_open()) {
         file << gameSetting.dump(4);
         file.close();
@@ -216,7 +216,7 @@ void Engine::AShroudedTomb_VeiledTruth::SaveSettings() {
 
 
 void Engine::AShroudedTomb_VeiledTruth::LoadSettings() {
-    ifstream file("ASTVT_gameSettings.json");
+    ifstream file("assets/ASTVT_gameSettings.json");
     if (file.is_open()) {
         json gameSetting;
         file >> gameSetting;

@@ -9,10 +9,10 @@ Engine::ASTVTPauseScreen::ASTVTPauseScreen(AShroudedTomb_VeiledTruth* instance) 
 void Engine::ASTVTPauseScreen::Init()
 {
 	// Create a Texture
-	Texture* continue_texture = new Texture("Continue.png");
-	Texture* mm_texture = new Texture("Main_Menu.png");
-	Texture* exit_texture = new Texture("Exit.png");
-	Texture* bg_texture = new Texture("pause_bg.png");
+	Texture* continue_texture = new Texture("assets/Continue.png");
+	Texture* mm_texture = new Texture("assets/Main_Menu.png");
+	Texture* exit_texture = new Texture("assets/Exit.png");
+	Texture* bg_texture = new Texture("assets/mc_phone.png");
 	backgroundSprite = (new Sprite(bg_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetSize((float)game->GetSettings()->screenWidth/2, (float)game->GetSettings()->screenHeight-150)
 		->SetPosition((game->GetSettings()->screenWidth / 2), 0);
 
@@ -50,7 +50,7 @@ void Engine::ASTVTPauseScreen::Init()
 	buttons[currentButtonIndex]->SetButtonState(Engine::ButtonState::HOVER);
 
 	// Create Text
-	text = (new Text("8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
+	text = (new Text("assets/8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
 		->SetText("Paused")->SetPosition(game->GetSettings()->screenWidth * 0.5f - 260, game->GetSettings()->screenHeight - 100.0f)->SetColor(255, 209, 122);
 
 }

@@ -14,9 +14,9 @@ Engine::Item::~Item()
 void Engine::Item::Init()
 {
 	sprite->SetScale(0.5f)->SetBoundingBoxSize(sprite->GetScaleWidth() - (9 * sprite->GetScale()), sprite->GetScaleHeight() - (10 * sprite->GetScale()))->SetPosition(-300, -300);
-	Texture* text_box_texture = new Texture("chatbox.png");
+	Texture* text_box_texture = new Texture("assets/chatbox.png");
 	text_box_sprite = (new Sprite(text_box_texture, astvt->GetDefaultSpriteShader(), astvt->GetDefaultQuad()))->SetScale(0.07f);
-	text_inside_box = (new Text("lucon.ttf", 10, astvt->GetDefaultTextShader()))->SetScale(1.0f)->SetColor(0, 0, 0)->SetText("Press (F)\nto collect");
+	text_inside_box = (new Text("assets/lucon.ttf", 10, astvt->GetDefaultTextShader()))->SetScale(1.0f)->SetColor(0, 0, 0)->SetText("Press (F)\nto collect");
 }
 
 void Engine::Item::Update(float deltaTime)

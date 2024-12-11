@@ -8,9 +8,9 @@ Engine::ASTVTGameOverScreen::ASTVTGameOverScreen(AShroudedTomb_VeiledTruth* inst
 void Engine::ASTVTGameOverScreen::Init()
 {
 	// Create a Texture
-	Texture* retry_texture = new Texture("Retry.png");
-	Texture* mm_texture = new Texture("Main_Menu.png");
-	Texture* exit_texture = new Texture("Exit.png");
+	Texture* retry_texture = new Texture("assets/Retry.png");
+	Texture* mm_texture = new Texture("assets/Main_Menu.png");
+	Texture* exit_texture = new Texture("assets/Exit.png");
 
 	// Create Sprites
 	Sprite* retrySprite = (new Sprite(retry_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))
@@ -46,11 +46,11 @@ void Engine::ASTVTGameOverScreen::Init()
 	buttons[currentButtonIndex]->SetButtonState(Engine::ButtonState::HOVER);
 
 	// Create Game Over Text
-	gameOverText = (new Text("8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
+	gameOverText = (new Text("assets/8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
 		->SetText("Game Over")->SetPosition(game->GetSettings()->screenWidth * 0.5f - 200, game->GetSettings()->screenHeight - 100.0f)->SetColor(255, 209, 122);
 
 	// Create Game Over Text
-	bestScoreText = (new Text("8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
+	bestScoreText = (new Text("assets/8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
 		->SetText("Try Again")->SetPosition(game->GetSettings()->screenWidth * 0.5f - 190, game->GetSettings()->screenHeight - 150.0f)->SetColor(255, 209, 122);
 
 }

@@ -8,9 +8,9 @@ Engine::ASTVTMainMenuScreen::ASTVTMainMenuScreen()
 void Engine::ASTVTMainMenuScreen::Init()
 {
 	// Create a Texture
-	Texture* bg_texture = new Texture("Cover.png");
-	Texture* play_texture = new Texture("Start_Game.png");
-	Texture* exit_texture = new Texture("Exit.png");
+	Texture* bg_texture = new Texture("assets/Cover.png");
+	Texture* play_texture = new Texture("assets/Start_Game.png");
+	Texture* exit_texture = new Texture("assets/Exit.png");
 	backgroundSprite = (new Sprite(bg_texture, game->GetDefaultSpriteShader(), game->GetDefaultQuad()))->SetSize((float)game->GetSettings()->screenWidth, (float)game->GetSettings()->screenHeight);
 
 	// Create Sprites
@@ -38,9 +38,8 @@ void Engine::ASTVTMainMenuScreen::Init()
 	buttons[currentButtonIndex]->SetButtonState(Engine::ButtonState::HOVER);
 
 	// Create Text
-	text = (new Text("8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
+	text = (new Text("assets/8-bit Arcade In.ttf", 100, game->GetDefaultTextShader()))
 		->SetText("Veiled Truth")->SetPosition(game->GetSettings()->screenWidth * 0.5f - 10, game->GetSettings()->screenHeight - 100.0f)->SetColor(255, 209, 122);
-
 }
 
 void Engine::ASTVTMainMenuScreen::Update()
